@@ -7,8 +7,9 @@ import java.util.ArrayList;
  */
 public class Conformation extends ArrayList<MonomerDirection> {
 
-
-    private float fitness;
+	private static final long serialVersionUID = 6741557062826032591L;
+	
+	private float fitness;
     private boolean ended;
 
 

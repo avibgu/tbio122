@@ -8,7 +8,10 @@ import java.util.ArrayList;
  *  An HP - model of toy protein.
  */
 public class Protein extends ArrayList<Monomer> implements Comparable<Protein> {
-    private float fitness;
+
+	private static final long serialVersionUID = -2614207202416458330L;
+	
+	private float fitness;
     private float energy;
     private static final int MAX_TRIES = 10;
     public   final Sequence sequence;
