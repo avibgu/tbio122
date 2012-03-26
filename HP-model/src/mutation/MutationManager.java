@@ -56,6 +56,11 @@ public class MutationManager {
 
     public LinkedList<Vector<Mutation>> readFromFile(String filename) {
 		try {
+			
+			//TODO
+			filename = "test/" + filename;
+			
+			
 			LinkedList<Vector<Mutation>> list = new LinkedList<Vector<Mutation>>();
 			Vector<Mutation> currentVector = null;
 
