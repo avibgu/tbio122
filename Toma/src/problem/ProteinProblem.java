@@ -29,7 +29,10 @@ public class ProteinProblem extends Problem {
 
 		setG(new double[mN]);
 		
-		//TODO: what should be g?..
+		for (int i = 0; i < mN; i++)
+			setG(i,1);
+
+		// TODO: improve G..
 	}
 
 	public int getN() {
@@ -91,12 +94,16 @@ public class ProteinProblem extends Problem {
 	public double getF(int pI) {
 		return getF()[pI];
 	}
+	
+	public void setG(int pI, int pValue) {
+		getG()[pI] = pValue;
+	}
 
 	public int getThetaI(int pI) {
 		return getTheta()[pI];
 	}
 	
-	public void setThetaI(int pI, int pNewThetaI) {
-		getTheta()[pI] = pNewThetaI;
+	public void setThetaI(int pI, int pValue) {
+		getTheta()[pI] = pValue;
 	}
 }
