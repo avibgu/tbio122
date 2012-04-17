@@ -2,6 +2,8 @@ package algorithm;
 
 import java.util.Date;
 
+import main.Main;
+
 import problem.Problem;
 
 public abstract class Algorithm implements Runnable {
@@ -34,7 +36,7 @@ public abstract class Algorithm implements Runnable {
 			return;
 		}
 
-		int numOfRuns = 0;	//TODO: get it from the configuration file?..
+		int numOfRuns = Integer.parseInt(Main.prop.getProperty("NUM_OF_RUNS"));
 		
 		mProblem.setStartTime(new Date());
 		

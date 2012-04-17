@@ -1,6 +1,16 @@
 package algorithm;
 
+import problem.Problem;
+
 public class Toma extends Algorithm {
+
+	public Toma() {
+		super();
+	}
+	
+	public Toma(Problem pProblem) {
+		super(pProblem);
+	}
 
 	@Override
 	protected int selectResidueRandomly() {
