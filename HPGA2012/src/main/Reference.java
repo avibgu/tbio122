@@ -1,6 +1,6 @@
 package main;
 
-public class Reference implements Comparable {
+public class Reference implements Comparable<Object> {
 
 	private double _fitness;
 	private final int _index;
