@@ -1,5 +1,7 @@
 package problem;
 
+import main.Main;
+
 public class ProteinProblem extends Problem {
 
 	private int mN;
@@ -22,7 +24,7 @@ public class ProteinProblem extends Problem {
 		
 		initG();
 		
-		setCk(0.3);	// TODO: what should we give him?..
+		setCk(Double.parseDouble(Main.prop.getProperty("CK")));
 	}
 
 	private void initG() {
@@ -32,7 +34,7 @@ public class ProteinProblem extends Problem {
 		for (int i = 0; i < mN; i++)
 			setG(i,1);
 
-		// TODO: improve G..
+		// improvement: setG(i,(20 / (i + 17)));
 	}
 
 	public int getN() {

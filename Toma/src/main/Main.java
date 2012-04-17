@@ -59,11 +59,15 @@ public class Main {
 		
 		if (null == prop.getProperty("NUM_OF_RUNS"))
 			prop.setProperty("NUM_OF_RUNS","10000");
+		
+		if (null == prop.getProperty("CK"))
+			prop.setProperty("CK","0.36");
 	}
 	
 	private static void initDefaultProperties() {
 
 		prop.setProperty("SEED","17");
 		prop.setProperty("NUM_OF_RUNS","10000");
+		prop.setProperty("CK","0.36");
 	}
 }

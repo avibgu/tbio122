@@ -75,7 +75,10 @@ public class Toma extends Algorithm {
 
 	@Override
 	protected void decreaseTemperature() {
-		// TODO should be performed due to some cooling strategy
+		// should be performed due to some cooling strategy
+		mProblem.setCk(mProblem.getCk() * 0.999999);
+		
+		// improvement: mProblem.setCk((0.3 * nH) / (0.5 * (nH + nP)));
 	}
 
 	@Override
