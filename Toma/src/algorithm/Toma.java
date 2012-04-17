@@ -7,7 +7,7 @@ public class Toma extends Algorithm {
 	public Toma() {
 		super();
 	}
-	
+
 	public Toma(Problem pProblem) {
 		super(pProblem);
 	}
@@ -20,18 +20,19 @@ public class Toma extends Algorithm {
 
 	@Override
 	protected boolean shouldWeMoveIt(int i) {
-		
+
 		// TODO move it if Rnd < exp[f(i)/ck]
-		
-		//	the criterion is always satisfied for residues not belonging to loop defined by HH contacts
-		
+
+		// the criterion is always satisfied for residues not belonging to loop
+		// defined by HH contacts
+
 		return false;
 	}
 
 	@Override
 	protected void performRandomlyMovement(int i) {
-
-		// TODO choose Theta(i), while taking the as invariant all other Theta coordinates (this correponds to a pivot move)
+		// TODO choose Theta(i), while taking as invariant all other Theta
+		// coordinates (this correponds to a pivot move)
 	}
 
 	@Override
@@ -47,15 +48,15 @@ public class Toma extends Algorithm {
 
 	@Override
 	protected void decreaseTemperature() {
-		// TODO should be performed due to some cooling strategy 
+		// TODO should be performed due to some cooling strategy
 	}
 
 	@Override
 	protected void updateF() {
 		// TODO do this for all the residues that participates in loops
-		//		we should avoid double-counting
+		// we should avoid double-counting
 	}
-	
+
 	@Override
 	protected void restoreStructure() {
 		// TODO Auto-generated method stub

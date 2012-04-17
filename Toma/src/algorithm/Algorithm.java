@@ -8,9 +8,9 @@ import problem.Problem;
 
 public abstract class Algorithm implements Runnable {
 
-	protected Problem	mProblem;
-	protected boolean	mInitialized;
-	protected int 		mNumOfMoves;
+	protected Problem mProblem;
+	protected boolean mInitialized;
+	protected int mNumOfMoves;
 
 	public Algorithm() {
 		mInitialized = false;
@@ -37,34 +37,33 @@ public abstract class Algorithm implements Runnable {
 		}
 
 		int numOfRuns = Integer.parseInt(Main.prop.getProperty("NUM_OF_RUNS"));
-		
+
 		mProblem.setStartTime(new Date());
-		
+
 		// i Assume that the initial state is extended structure
-		
-		while(numOfRuns-- > 0){
-			
-			int i = selectResidueRandomly();	// i think they meant monomer..
-			
-			if (shouldWeMoveIt(i)){
-				
+
+		while (numOfRuns-- > 0) {
+
+			int i = selectResidueRandomly(); // i think they meant monomer..
+
+			if (shouldWeMoveIt(i)) {
+
 				performRandomlyMovement(i);
-				
-				if (isTheStructureValid()){
-					
+
+				if (isTheStructureValid()) {
+
 					evaluateStructureEnergy();
 					countThisMove();
 					decreaseTemperature();
 					updateF();
-				}
-				else
+				} else
 					restoreStructure();
-					
+
 			}
 		}
-		
+
 		mProblem.setEndTime(new Date());
-		
+
 		mProblem.markAsSolved();
 	}
 
@@ -72,12 +71,19 @@ public abstract class Algorithm implements Runnable {
 		mNumOfMoves++;
 	}
 
-	protected abstract int		selectResidueRandomly();
-	protected abstract boolean	shouldWeMoveIt(int i);
-	protected abstract void		performRandomlyMovement(int i);
-	protected abstract boolean	isTheStructureValid();
-	protected abstract void		evaluateStructureEnergy();
-	protected abstract void		decreaseTemperature();
-	protected abstract void		updateF();
-	protected abstract void		restoreStructure();
+	protected abstract int selectResidueRandomly();
+
+	protected abstract boolean shouldWeMoveIt(int i);
+
+	protected abstract void performRandomlyMovement(int i);
+
+	protected abstract boolean isTheStructureValid();
+
+	protected abstract void evaluateStructureEnergy();
+
+	protected abstract void decreaseTemperature();
+
+	protected abstract void updateF();
+
+	protected abstract void restoreStructure();
 }
