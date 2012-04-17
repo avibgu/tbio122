@@ -1,0 +1,6 @@
+Sequence,Dimension,Population size,Generations,Higest fitness,Lowest energy,Conformation
+HHPPHH,,4000,10,2.0,-2.0,Conformation 2.0 -2.0 f>^>>^
+Sequence,Dimension,Population size,Generations,Higest fitness,Lowest energy,Conformation
+HHPPHH,,4000,10,2.0,-2.0,Conformation 2.0 -2.0 f>^>>^
+Sequence,Dimension,Population size,Generations,Higest fitness,Lowest energy,Conformation
+ppphhpphhppppphhhhhhhpphhpppphhpphpp,,4000,10000,11.0,-11.0,Conformation 11.0 -11.0 f<><>^<<^^<>>^^^^<<^>^>><<>^>><<>><^

@@ -1,0 +1,164 @@
+package math;
+
+import main.MonomerDirection;
+import main.Dimensions;
+
+import javax.vecmath.Vector3f;
+
+// TODO: can this class be static?
+public class MatrixManipulation {
+	private Dimensions dimensions;
+	
+	public MatrixManipulation(Dimensions dimenstions){
+		this.dimensions = dimenstions;
+	}
+	
+	/**
+	 * do Lorentz transformation on the given vector.
+	 * 
+	 * @param vector the vector to activate the lorentz transformation
+	 * @param axis the axis
+	 * @param degree the degree
+	 * 
+	 * @return the vector3f after lorentz transformation 
+	 */
+	public Vector3f LorentzTransformation(Vector3f vector,char axis, double degree)
+	{
+		if (degree == 0)
+			return vector;
+		
+		double[][] t = new double[][]{{vector.x},{vector.y},{vector.z}};
+		double[][] uMatrix = getLorentzUMatrix(axis, degree);
+		double[][] ans = matrixMultiply(uMatrix, t);
+		Vector3f newVector = new Vector3f();
+		newVector.x = new Double(ans[0][0]).floatValue();
+		newVector.y = new Double(ans[1][0]).floatValue();
+		newVector.z = new Double(ans[2][0]).floatValue();
+		
+		return newVector;
+	}
+	
+	/** 
+    * Return the U matrix for the Lorentz Transformation, see more on
+    * <a>http://en.wikipedia.org/wiki/Lorentz_transformation</a> 
+    * @param axis the char of the axis: 'x' / 'y' / 'z' only (<b>case sensitive</b>) - doesn't matter if dimension set to 2D 
+    * @param degree the degree for rotating around the axis. <b>positive side is counter clockwise</b>
+    * @return the U matrix for the Lorentz Transformation if the degree is zero the return
+    * an empty matrix in size [0][0]. in case of an error returns null 
+    */ 
+	private double[][] getLorentzUMatrix(char axis,double degree)
+	{
+		if (degree == 0)
+			return new double[0][0];
+		double[][] ans;
+		
+		if (this.dimensions == Dimensions.TWO)
+		{
+			ans = new double[][]{{Math.cos(degree),-Math.sin(degree),0},{Math.sin(degree),Math.cos(degree),0},{0,0,0}};
+			fixZeros(ans);
+			return ans;
+		}
+
+		switch (axis)
+		{
+			case 'x':
+				ans = new double[][]{{1,0,0},{0,Math.cos(degree),-Math.sin(degree)},{0,Math.sin(degree),Math.cos(degree)}};
+				break;
+			case 'y':
+				ans = new double[][]{{Math.cos(degree),0,Math.sin(degree)},{0,1,0},{-Math.sin(degree),0,Math.cos(degree)}};
+				break;
+			case 'z':
+				ans = new double[][]{{Math.cos(degree),-Math.sin(degree),0},{Math.sin(degree),Math.cos(degree),0},{0,0,1}};
+				break;
+			default:
+				ans = null;
+				break;
+		}
+		fixZeros(ans);
+		return ans;
+	}
+	
+	/**
+	 * Matrix multiply.
+	 * 
+	 * @param A the first Matrix to multiply
+	 * @param B the second Matrix to multiply
+	 * 
+	 * @return the answer for the cross of A x B
+	 */
+	private double[][] matrixMultiply(double[][] A, double[][] B) {
+		if (A[0].length != B.length) //the matrix A & B cannot be multiplied
+			throw new RuntimeException("Dimentions of matrices do not match\n"+"A[0].length = "+A[0].length+"\n"+"B.length = "+B.length);
+		double[][] ans = new double[A.length][B[0].length];
+		int rows = ans.length;
+		int columns = ans[0].length;
+		int n = B.length;
+		for (int i = 0; i < rows; i++) 
+		{
+			for (int j = 0; j < columns; j++) 
+			{
+				for (int r=0;r<n;r++)
+				{
+					ans[i][j] += A[i][r]*B[r][j];
+				}
+			}
+		}
+		return ans;
+	}
+	
+	
+	/**
+	 * Fix zeros. this method round numbers the smallest then 1.0E-10 to zero
+	 * 
+	 * @param matrix the matrix to fix the numbers in it
+	 */
+	private void fixZeros(double[][] matrix)
+	{
+		if (matrix == null)
+			return;
+		int rows = matrix.length;
+		int columns = matrix[0].length;		
+		for (int i = 0; i < rows; i++) 
+		{
+			for (int j = 0; j < columns; j++) 
+			{
+				if (Math.abs(matrix[i][j]) <= 1.0E-7)
+					matrix[i][j] = 0;
+			}
+		}
+	}
+	/**
+	 * Gets 3 vectors v1,v2,v3 and returns the direction from the v2 to v3 if v2 came right after v1.
+	 * Support two dimensions only! 
+	 * @param v1 first vector.
+	 * @param v2 second vector
+	 * @param v3 third vector
+	 * @return direction from v2 to v3.
+	 */
+	public MonomerDirection  getDirection(Vector3f v1, Vector3f v2, Vector3f v3){
+		
+		// Support only two dimensions at this point.
+		if (dimensions != Dimensions.TWO)
+			return MonomerDirection.UNKNOWN;
+				
+		Vector3f toDirectoin = new Vector3f(v3);
+		toDirectoin.sub(v1);
+		Vector3f fromDirection = new Vector3f(v2);
+		fromDirection.sub(v1);			
+		
+		// rotate fromDirection right
+		fromDirection = LorentzTransformation(fromDirection,'y', -Math.PI / 2);
+		
+		// calc between fromDirection to toDirection
+		float angle= toDirectoin.angle(fromDirection);
+		
+		// return direction according to angle.
+		float halfPI = (float)Math.PI/2; // must cast PI from double to float in order to compare angle.		
+		if (angle < halfPI)
+			return MonomerDirection.RIGHT;
+		else if (angle > halfPI)
+			return MonomerDirection.LEFT;
+		else return MonomerDirection.FORWARD;		
+	}
+
+}
