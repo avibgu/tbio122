@@ -44,6 +44,9 @@ public class Main {
 		}
 		
 		executor.awaitTermination(1, TimeUnit.DAYS);
+		
+		for (Problem problem : problems)
+			problem.printSolution();
 	}
 
 	private static void initPropertiesFromFile(String pPropertiesFileLocation) throws Exception{

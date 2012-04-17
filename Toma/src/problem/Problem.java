@@ -38,4 +38,9 @@ public abstract class Problem {
 	public void markAsUnsolved() {
 		mSolved = false;
 	}
+
+	public void printSolution() {
+		// TODO Auto-generated method stub
+		
+	}
 }
