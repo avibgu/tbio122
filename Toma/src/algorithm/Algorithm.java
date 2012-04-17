@@ -4,11 +4,11 @@ import java.util.Date;
 
 import main.Main;
 
-import problem.Problem;
+import problem.ProteinProblem;
 
 public abstract class Algorithm implements Runnable {
 
-	protected Problem mProblem;
+	protected ProteinProblem mProblem;
 	protected boolean mInitialized;
 	protected int mNumOfMoves;
 
@@ -16,12 +16,12 @@ public abstract class Algorithm implements Runnable {
 		mInitialized = false;
 	}
 
-	public Algorithm(Problem pProblem) {
+	public Algorithm(ProteinProblem pProblem) {
 		this();
 		init(pProblem);
 	}
 
-	public void init(Problem pProblem) {
+	public void init(ProteinProblem pProblem) {
 		mProblem = pProblem;
 		mInitialized = true;
 		mNumOfMoves = 0;
@@ -44,7 +44,7 @@ public abstract class Algorithm implements Runnable {
 
 		while (numOfRuns-- > 0) {
 
-			int i = selectResidueRandomly(); // i think they meant monomer..
+			int i = selectResidueRandomly();
 
 			if (shouldWeMoveIt(i)) {
 
@@ -57,7 +57,7 @@ public abstract class Algorithm implements Runnable {
 					decreaseTemperature();
 					updateF();
 				} else
-					restoreStructure();
+					restoreStructure(i);
 
 			}
 		}
@@ -85,5 +85,5 @@ public abstract class Algorithm implements Runnable {
 
 	protected abstract void updateF();
 
-	protected abstract void restoreStructure();
+	protected abstract void restoreStructure(int pI);
 }

@@ -12,6 +12,7 @@ import algorithm.Algorithm;
 import algorithm.Toma;
 
 import problem.Problem;
+import problem.ProteinProblem;
 import utilities.FileManipulator;
 
 public class Main {
@@ -34,9 +35,9 @@ public class Main {
 		
 		Algorithm algorithm;
 		
-		Set<Problem> problems = FileManipulator.getProblemsFromFile(args[0]);
+		Set<ProteinProblem> problems = FileManipulator.getProblemsFromFile(args[0]);
 		
-		for (Problem problem : problems){
+		for (ProteinProblem problem : problems){
 			
 			algorithm = new Toma(problem);
 			
