@@ -106,9 +106,13 @@ public class Toma extends Algorithm {
 
 			Point x = mTempPositions.get(i);
 
-			for (int j = i + 1; j < mTempPositions.size(); j++)
-				if (!mProblem.isNeighbors(x, mTempPositions.get(j)))
-					mLoops.add(new Pair(i,j));
+			for (int j = i + 1; j < mTempPositions.size(); j++){
+				
+				Point y = mTempPositions.get(j);
+				
+				if (!mProblem.isNeighbors(x, y))
+					mLoops.add(new Pair(mProblem.getPointIndex(x),mProblem.getPointIndex(y)));
+			}
 		}
 
 		mProblem.setE(mLoops.size());

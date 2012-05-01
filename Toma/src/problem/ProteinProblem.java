@@ -245,4 +245,12 @@ public class ProteinProblem extends Problem {
 		
 		return (-1 == difference || 1 == difference);
 	}
+	
+	public void printSolution() {
+
+		System.out.println("Energy: " + getE());
+		
+		for (Point point : mPositions)
+			System.out.print(point + " ");
+	}
 }

@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import algorithm.Algorithm;
 import algorithm.Toma;
 
-import problem.Problem;
 import problem.ProteinProblem;
 import utilities.FileManipulator;
 
@@ -46,7 +45,7 @@ public class Main {
 		
 		executor.awaitTermination(1, TimeUnit.DAYS);
 		
-		for (Problem problem : problems)
+		for (ProteinProblem problem : problems)
 			problem.printSolution();
 	}
 

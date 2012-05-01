@@ -13,9 +13,8 @@ public class FileManipulator {
 		
 		Set<ProteinProblem> answer = new HashSet<ProteinProblem>();
 		
-		answer.add(new ProteinProblem("ppphhpphhppppphhhhhhhpphhpppphhpphpp"));
+		answer.add(new ProteinProblem("HHHPPHPHPHPPHPHPHPPH"));
 
 		return answer;
 	}
-
 }
