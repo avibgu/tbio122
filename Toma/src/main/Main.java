@@ -43,6 +43,8 @@ public class Main {
 			executor.execute(algorithm);
 		}
 		
+		executor.shutdown();
+		
 		executor.awaitTermination(1, TimeUnit.DAYS);
 		
 		for (ProteinProblem problem : problems)
