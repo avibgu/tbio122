@@ -14,17 +14,20 @@ public class Toma extends Algorithm {
 	private List<Pair> mLoops;
 
 	public Toma() {
-		
 		super();
-		
-		mTempPositions = new ArrayList<Point>(mProblem.getN());
-		mLoops = new ArrayList<Pair>();
+		initDataStructures();
 	}
 
 	public Toma(ProteinProblem pProblem) {
 		super(pProblem);
+		initDataStructures();
 	}
 
+	private void initDataStructures() {
+		mTempPositions = new ArrayList<Point>(mProblem.getN());
+		mLoops = new ArrayList<Pair>();
+	}
+	
 	@Override
 	protected int selectResidueRandomly() {
 		return (int) (mProblem.getRandom().nextDouble() * (mProblem.getN() - 1));
@@ -95,7 +98,7 @@ public class Toma extends Algorithm {
 		mTempPositions.clear();
 		mLoops.clear();
 
-		for (int i = 0; i <= mProblem.getN(); i++)
+		for (int i = 0; i < mProblem.getN(); i++)
 			if (mProblem.getType(i) == 'H')
 				mTempPositions.add(mProblem.getPosition(i));
 

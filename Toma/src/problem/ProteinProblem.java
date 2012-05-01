@@ -176,6 +176,9 @@ public class ProteinProblem extends Problem {
 
 	public void calcPositionsStartingFromI(int pIndex) {
 
+		if (0 == pIndex)
+			pIndex++;
+		
 		int xI = (int) getPosition(pIndex).getX();
 		int yI = (int) getPosition(pIndex).getY();
 
