@@ -7,17 +7,17 @@ import main.Main;
 
 public abstract class Problem {
 
-	protected boolean mSolved;
-	protected Date mStartTime; 
-	protected Date mEndTime;
-	protected Random mRandom;
+	protected boolean	mSolved;
+	protected Date		mStartTime; 
+	protected Date		mEndTime;
+	protected Random	mRandom;
 	
 	public Problem() {
 		init();
 	}
 	
-	public void init(){
-		
+	public void init() {
+
 		markAsUnsolved();
 		setStartTime(null);
 		setEndTime(null);

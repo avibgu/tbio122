@@ -4,13 +4,13 @@ import main.Main;
 
 public class ProteinProblem extends Problem {
 
-	private int mN;
-	private int mE;
-	private char[] mSequense;
-	private int[] mTheta;
-	private double[] mF;
-	private double[] mG;
-	private double mCk;
+	private int			mN;
+	private int			mE;
+	private char[]		mSequense;
+	private int[]		mTheta;
+	private double[]	mF;
+	private double[]	mG;
+	private double		mCk;
 	
 	public ProteinProblem(String pSequense) {
 	

@@ -2,15 +2,15 @@ package algorithm;
 
 import problem.ProteinProblem;
 
-public class Toma extends Algorithm {
+public class AlgorithmImpl extends Algorithm {
 
 	private int mOldThetaI; 
 	
-	public Toma() {
+	public AlgorithmImpl() {
 		super();
 	}
 
-	public Toma(ProteinProblem pProblem) {
+	public AlgorithmImpl(ProteinProblem pProblem) {
 		super(pProblem);
 	}
 
