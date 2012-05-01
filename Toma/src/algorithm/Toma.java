@@ -1,25 +1,27 @@
 package algorithm;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
 import problem.ProteinProblem;
 
-public class AlgorithmImpl extends Algorithm {
+public class Toma extends Algorithm {
 
 	private int mOldThetaI;
+	private List<Point> mTempPositions;
 
-	public AlgorithmImpl() {
+	public Toma() {
 		super();
+		mTempPositions = new ArrayList<Point>(mProblem.getN());
 	}
 
-	public AlgorithmImpl(ProteinProblem pProblem) {
+	public Toma(ProteinProblem pProblem) {
 		super(pProblem);
 	}
 
 	@Override
 	protected int selectResidueRandomly() {
-
-		// TODO: instead of randomly, should get a set of possible moves, like
-		// 'MutationManager.mutate' does (line 444), and choose one of them
-
 		return (int) (mProblem.getRandom().nextDouble() * (mProblem.getN() - 1));
 	}
 
@@ -36,9 +38,6 @@ public class AlgorithmImpl extends Algorithm {
 		double x = Math.exp(mProblem.getF(pI) / mProblem.getCk());
 
 		return rnd < x;
-		
-		// TODO: after changing 'selectResidueRandomly',
-		// we should return always true.
 	}
 
 	@Override
@@ -61,28 +60,51 @@ public class AlgorithmImpl extends Algorithm {
 		mOldThetaI = mProblem.getThetaI(pI);
 
 		mProblem.setThetaI(pI, newThetaI);
-		
-		// TODO: should perform the movement that 'selectResidueRandomly' chose.
 	}
 
 	@Override
 	protected boolean isTheStructureValid(int pI) {
-		// TODO we can check collisions only between x,y s.t. x from X and y
-		// from Y. X = {monomers before i}, Y = {monomers after i}, and maybe
-		// also i..
+		// we can check collisions only between x,y s.t. x from X and y
+		// from Y. X = {monomers before i (include i)}, Y = {monomers after i}
 
-		// improvement: we can calthe Rectangles of those two Sets, and only
+		// improvement: we can calc the Rectangles of those two Sets, and only
 		// when they collide we will perform the big check
 
-		return false;
-		
-		// TODO: after changing 'selectResidueRandomly',
-		// we should return always true.
+		mProblem.calcPositionsStartingFromI(pI);
+
+		mTempPositions.clear();
+
+		for (int i = 0; i <= pI; i++)
+			mTempPositions.add(mProblem.getPosition(i));
+
+		for (int i = pI + 1; i < mProblem.getN(); i++)
+			if (mTempPositions.contains(mProblem.getPosition(i)))
+				return false;
+
+		return true;
 	}
 
 	@Override
 	protected void evaluateStructureEnergy() {
-		// TODO Auto-generated method stub
+
+		int energy = 0;
+
+		mTempPositions.clear();
+
+		for (int i = 0; i <= mProblem.getN(); i++)
+			if (mProblem.getType(i) == 'H')
+				mTempPositions.add(mProblem.getPosition(i));
+
+		for (int i = 0; i < mTempPositions.size(); i++) {
+
+			Point x = mTempPositions.get(i);
+
+			for (int j = i + 1; j < mTempPositions.size(); j++)
+				if (!mProblem.isNeighbors(x, mTempPositions.get(j)))
+					energy -= 1;
+		}
+
+		mProblem.setE(energy);
 	}
 
 	@Override
@@ -102,7 +124,5 @@ public class AlgorithmImpl extends Algorithm {
 	@Override
 	protected void restoreStructure(int pI) {
 		mProblem.setThetaI(pI, mOldThetaI);
-		
-		// TODO: after changing 'selectResidueRandomly', this method is useless.
 	}
 }

@@ -50,7 +50,7 @@ public abstract class Algorithm implements Runnable {
 
 				performRandomlyMovement(i);
 
-				if (isTheStructureValid()) {
+				if (isTheStructureValid(i)) {
 
 					evaluateStructureEnergy();
 					countThisMove();
@@ -76,7 +76,7 @@ public abstract class Algorithm implements Runnable {
 
 	protected abstract void performRandomlyMovement(int i);
 
-	protected abstract boolean isTheStructureValid();
+	protected abstract boolean isTheStructureValid(int i);
 
 	protected abstract void evaluateStructureEnergy();
 
