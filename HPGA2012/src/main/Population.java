@@ -11,7 +11,9 @@ import mutation.MutationManager;
  */
 @SuppressWarnings("serial")
 public class Population extends ArrayList<Protein> {
+
 	ArrayList<Reference> ref;
+
 	/** The random number to used in the population. */
 	public final Random random;
 
@@ -38,6 +40,7 @@ public class Population extends ArrayList<Protein> {
 	 */
 	public Population(Configuration config, Random rand,
 			MutationManager mutationManger) {
+
 		random = rand;
 		size = config.populationSize;
 
@@ -47,7 +50,9 @@ public class Population extends ArrayList<Protein> {
 		grid = new Grid(config.sequence.length(), dimensions);
 
 		this.ref = new ArrayList<Reference>();
+
 		for (int i = 0; i < size; i++) {
+
 			Protein protein = new Protein(dimensions, sequence, random, grid,
 					"protein" + i);
 			add(protein);
@@ -78,6 +83,7 @@ public class Population extends ArrayList<Protein> {
 	 * @return the last
 	 */
 	public Protein[] getLastTwo() {
+
 		Protein[] out = new Protein[2];
 		// out[0] = get(size()-1);
 		// out[1] = get(size()-2);
@@ -88,6 +94,7 @@ public class Population extends ArrayList<Protein> {
 
 	// our addition
 	public Protein getByRef(int index) {
+
 		int i = this.ref.get(index).getIndex();
 		return this.get(i);
 	}
@@ -106,6 +113,7 @@ public class Population extends ArrayList<Protein> {
 	 * 
 	 */
 	public void mutate() {
+
 		Protein in = chooseProtein();
 		Protein out = getLast();
 		mutationManger.mutate(in, out, 10);
@@ -122,6 +130,7 @@ public class Population extends ArrayList<Protein> {
 	 * @return the selected protein
 	 */
 	Protein chooseProtein() {
+
 		float rnd = random.nextFloat(); // Evenly distibuted between 0 and 1
 		rnd = 1 - ((2 * rnd) / (rnd + 1));// Uneenly distibuted between 0 and 1
 		return getByRef((int) (rnd * (size() - 1)));
@@ -133,9 +142,13 @@ public class Population extends ArrayList<Protein> {
 	 * @return the best energy
 	 */
 	public float getBestEnergy() {
+
 		float best = this.getFirst().getEnergy();
+
 		for (Protein protein : this) {
+
 			if (protein.getEnergy() > best) {
+
 				best = protein.getEnergy();
 			}
 		}
@@ -148,10 +161,15 @@ public class Population extends ArrayList<Protein> {
 	 * @return the best fitness
 	 */
 	public float getBestFitness() {
+
 		float best = this.getFirst().getFitness();
+
 		for (Protein protein : this) {
+
 			if (protein.getFitness() > best) {
+
 				best = protein.getFitness();
+
 			}
 		}
 		return best;
@@ -163,12 +181,18 @@ public class Population extends ArrayList<Protein> {
 	 * @return the worst energy
 	 */
 	public float getWorstEnergy() {
+
 		float best = this.getFirst().getEnergy();
+
 		for (Protein protein : this) {
+
 			if (protein.getEnergy() < best) {
+
 				best = protein.getEnergy();
+
 			}
 		}
+
 		return best;
 	}
 
@@ -178,9 +202,13 @@ public class Population extends ArrayList<Protein> {
 	 * @return the worst fitness
 	 */
 	public float getWorstFitness() {
+
 		float best = this.getFirst().getFitness();
+
 		for (Protein protein : this) {
+
 			if (protein.getFitness() < best) {
+
 				best = protein.getFitness();
 			}
 		}

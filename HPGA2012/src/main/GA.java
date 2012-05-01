@@ -13,6 +13,7 @@ public class GA {
 	private static long startTime;
 
 	public static void main(String[] argv) {
+		
 		startTime = new Date().getTime();
 		Configuration config = getConfiguration(argv);
 		OutputFilesWriter outWriter = getOutWriter(config);
@@ -20,6 +21,7 @@ public class GA {
 		GARun run = new GARun(outWriter, config, mutationManager);
 
 		for (int i = 0; i < config.numberOfRepeats; i++) {
+			
 			run.initiate(i); // An independent run
 			System.out.println("Starting Run " + i + " ...");
 			run.execute();
