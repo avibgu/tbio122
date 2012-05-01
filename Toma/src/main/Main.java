@@ -46,7 +46,7 @@ public class Main {
 		executor.awaitTermination(1, TimeUnit.DAYS);
 		
 		for (ProteinProblem problem : problems)
-			problem.printSolution();
+			System.out.println("FINISH\n" + problem);
 	}
 
 	private static void initPropertiesFromFile(String pPropertiesFileLocation) throws Exception{

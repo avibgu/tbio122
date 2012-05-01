@@ -44,6 +44,9 @@ public abstract class Algorithm implements Runnable {
 
 		while (numOfRuns-- > 0) {
 
+			//TODO: just for debug..
+			System.out.println(mProblem);
+			
 			int i = selectResidueRandomly();
 
 			if (shouldWeMoveIt(i)) {

@@ -115,7 +115,7 @@ public class Toma extends Algorithm {
 			}
 		}
 
-		mProblem.setE(mLoops.size());
+		mProblem.setE(-mLoops.size());
 	}
 
 	@Override
@@ -155,5 +155,6 @@ public class Toma extends Algorithm {
 	@Override
 	protected void restoreStructure(int pI) {
 		mProblem.setThetaI(pI, mOldThetaI);
+		mProblem.calcPositionsStartingFromI(pI);
 	}
 }
