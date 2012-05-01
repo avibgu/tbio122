@@ -58,7 +58,6 @@ public abstract class Algorithm implements Runnable {
 					updateF();
 				} else
 					restoreStructure(i);
-
 			}
 		}
 

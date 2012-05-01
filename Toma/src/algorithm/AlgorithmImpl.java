@@ -4,8 +4,8 @@ import problem.ProteinProblem;
 
 public class AlgorithmImpl extends Algorithm {
 
-	private int mOldThetaI; 
-	
+	private int mOldThetaI;
+
 	public AlgorithmImpl() {
 		super();
 	}
@@ -16,6 +16,10 @@ public class AlgorithmImpl extends Algorithm {
 
 	@Override
 	protected int selectResidueRandomly() {
+
+		// TODO: instead of randomly, should get a set of possible moves from
+		// mutate (i think) and choose one of them
+
 		return (int) (mProblem.getRandom().nextDouble() * (mProblem.getN() - 1));
 	}
 
@@ -28,32 +32,37 @@ public class AlgorithmImpl extends Algorithm {
 		// defined by HH contacts
 
 		double rnd = mProblem.getRandom().nextDouble();
-		
+
 		double x = Math.exp(mProblem.getF(pI) / mProblem.getCk());
-		
+
 		return rnd < x;
+		
+		// TODO: after changing 'selectResidueRandomly',
+		// we should return always true.
 	}
 
 	@Override
 	protected void performRandomlyMovement(int pI) {
 		// choose Theta(i), while taking as invariant all other Theta
-		// coordinates (this correponds to a pivot move)
-		
-		// is this ok?..
-		
+		// coordinates (this corresponds to a pivot move)
+
+		// is this ok?.. or should we choosee only 1 or -1?..
+
 		double rnd = mProblem.getRandom().nextDouble();
-		
+
 		int newThetaI = 0;
-		
-		if (rnd < 0.3)
+
+		if (rnd <= 0.3)
 			newThetaI = -1;
-		
-		else if (rnd > 0.6)
+
+		else if (rnd >= 0.6)
 			newThetaI = 1;
-		
+
 		mOldThetaI = mProblem.getThetaI(pI);
-		
+
 		mProblem.setThetaI(pI, newThetaI);
+		
+		// TODO: should perform the movement that 'selectResidueRandomly' chose.
 	}
 
 	@Override
@@ -66,6 +75,9 @@ public class AlgorithmImpl extends Algorithm {
 		// when they collide we will perform the big check
 
 		return false;
+		
+		// TODO: after changing 'selectResidueRandomly',
+		// we should return always true.
 	}
 
 	@Override
@@ -77,7 +89,7 @@ public class AlgorithmImpl extends Algorithm {
 	protected void decreaseTemperature() {
 		// should be performed due to some cooling strategy
 		mProblem.setCk(mProblem.getCk() * 0.999999);
-		
+
 		// improvement: mProblem.setCk((0.3 * nH) / (0.5 * (nH + nP)));
 	}
 
@@ -90,5 +102,7 @@ public class AlgorithmImpl extends Algorithm {
 	@Override
 	protected void restoreStructure(int pI) {
 		mProblem.setThetaI(pI, mOldThetaI);
+		
+		// TODO: after changing 'selectResidueRandomly', this method is useless.
 	}
 }
