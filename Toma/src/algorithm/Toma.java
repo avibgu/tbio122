@@ -4,16 +4,22 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.Pair;
+
 import problem.ProteinProblem;
 
 public class Toma extends Algorithm {
 
 	private int mOldThetaI;
 	private List<Point> mTempPositions;
+	private List<Pair<Integer, Integer>> mLoops;
 
 	public Toma() {
+		
 		super();
+		
 		mTempPositions = new ArrayList<Point>(mProblem.getN());
+		mLoops = new ArrayList<Pair<Integer, Integer>>();
 	}
 
 	public Toma(ProteinProblem pProblem) {
@@ -87,9 +93,8 @@ public class Toma extends Algorithm {
 	@Override
 	protected void evaluateStructureEnergy() {
 
-		int energy = 0;
-
 		mTempPositions.clear();
+		mLoops.clear();
 
 		for (int i = 0; i <= mProblem.getN(); i++)
 			if (mProblem.getType(i) == 'H')
@@ -101,10 +106,10 @@ public class Toma extends Algorithm {
 
 			for (int j = i + 1; j < mTempPositions.size(); j++)
 				if (!mProblem.isNeighbors(x, mTempPositions.get(j)))
-					energy -= 1;
+					mLoops.add(new Pair<Integer,Integer>(i,j));
 		}
 
-		mProblem.setE(energy);
+		mProblem.setE(mLoops.size());
 	}
 
 	@Override
@@ -117,8 +122,28 @@ public class Toma extends Algorithm {
 
 	@Override
 	protected void updateF() {
-		// TODO do this for all the residues that participates in loops
+		// do this for all the residues that participates in loops
 		// we should avoid double-counting
+		
+		int tmp;
+		int length;
+		
+		for (Pair<Integer, Integer> loop : mLoops){
+			
+			int from = loop.getFirst();
+			int to = loop.getSecond();
+			
+			if (from > to){
+				tmp = to;
+				to = from;
+				from = tmp;
+			}
+			
+			length = to - from;
+			
+			for (int i = from; i <= to; i++)
+				mProblem.decreaseF(i, mProblem.getG(length));
+		}
 	}
 
 	@Override

@@ -130,6 +130,18 @@ public class ProteinProblem extends Problem {
 		mF = pF;
 	}
 
+	public double getF(int pI) {
+		return getF()[pI];
+	}
+	
+	public void setF(int pI, double pValue) {
+		getF()[pI] = pValue;
+	}
+	
+	public void decreaseF(int pI, double pValue) {
+		setF(pI, getF(pI) - pValue);
+	}
+	
 	public double[] getG() {
 		return mG;
 	}
@@ -138,20 +150,20 @@ public class ProteinProblem extends Problem {
 		mG = pG;
 	}
 
+	public void setG(int pI, int pValue) {
+		getG()[pI] = pValue;
+	}
+	
+	public double getG(int pI) {
+		return getG()[pI];
+	}
+	
 	public double getCk() {
 		return mCk;
 	}
 
 	public void setCk(double pCk) {
 		mCk = pCk;
-	}
-
-	public double getF(int pI) {
-		return getF()[pI];
-	}
-
-	public void setG(int pI, int pValue) {
-		getG()[pI] = pValue;
 	}
 
 	public int getThetaI(int pI) {
@@ -225,7 +237,9 @@ public class ProteinProblem extends Problem {
 	}
 
 	public boolean isNeighbors(Point pX, Point pY) {
-		// TODO Auto-generated method stub
-		return false;
+
+		int difference = getPointIndex(pX) - getPointIndex(pY);
+		
+		return (-1 == difference || 1 == difference);
 	}
 }
