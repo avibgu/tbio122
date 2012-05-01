@@ -446,10 +446,9 @@ public class MutationManager {
 				/* Filter mutations - save only valid mutations */
 
 				// collect position of the protein before and after the
-				// mutation.
-				// save them not as absolut position but as offset from the star
-				// of mutation, this
-				// helps us compare them to the position needed by the mutation.
+				// mutation. save them not as absolute position but as offset
+				// from the start of mutation, this helps us compare them to the
+				// position needed by the mutation.
 				proteinPositions.clear();
 
 				for (int i = 0; i < protein.size(); i++) {

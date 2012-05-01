@@ -17,8 +17,8 @@ public class AlgorithmImpl extends Algorithm {
 	@Override
 	protected int selectResidueRandomly() {
 
-		// TODO: instead of randomly, should get a set of possible moves from
-		// mutate (i think) and choose one of them
+		// TODO: instead of randomly, should get a set of possible moves, like
+		// 'MutationManager.mutate' does (line 444), and choose one of them
 
 		return (int) (mProblem.getRandom().nextDouble() * (mProblem.getN() - 1));
 	}
