@@ -4,22 +4,21 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.Pair;
-
+import problem.Pair;
 import problem.ProteinProblem;
 
 public class Toma extends Algorithm {
 
 	private int mOldThetaI;
 	private List<Point> mTempPositions;
-	private List<Pair<Integer, Integer>> mLoops;
+	private List<Pair> mLoops;
 
 	public Toma() {
 		
 		super();
 		
 		mTempPositions = new ArrayList<Point>(mProblem.getN());
-		mLoops = new ArrayList<Pair<Integer, Integer>>();
+		mLoops = new ArrayList<Pair>();
 	}
 
 	public Toma(ProteinProblem pProblem) {
@@ -106,7 +105,7 @@ public class Toma extends Algorithm {
 
 			for (int j = i + 1; j < mTempPositions.size(); j++)
 				if (!mProblem.isNeighbors(x, mTempPositions.get(j)))
-					mLoops.add(new Pair<Integer,Integer>(i,j));
+					mLoops.add(new Pair(i,j));
 		}
 
 		mProblem.setE(mLoops.size());
@@ -128,7 +127,7 @@ public class Toma extends Algorithm {
 		int tmp;
 		int length;
 		
-		for (Pair<Integer, Integer> loop : mLoops){
+		for (Pair loop : mLoops){
 			
 			int from = loop.getFirst();
 			int to = loop.getSecond();
