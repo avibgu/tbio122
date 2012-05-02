@@ -1,8 +1,9 @@
 package algorithm;
 
-import problem.ProteinProblem;
+import problem.Protein;
 
-public class AlgorithmImpl extends Algorithm {
+@Deprecated
+public class AlgorithmImpl extends TomaAlgorithm {
 
 	private int mOldThetaI;
 
@@ -10,7 +11,7 @@ public class AlgorithmImpl extends Algorithm {
 		super();
 	}
 
-	public AlgorithmImpl(ProteinProblem pProblem) {
+	public AlgorithmImpl(Protein pProblem) {
 		super(pProblem);
 	}
 

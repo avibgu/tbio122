@@ -8,10 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import algorithm.Algorithm;
-import algorithm.Toma;
+import algorithm.TomaAlgorithm;
+import algorithm.MyTomaAlgorithm;
 
-import problem.ProteinProblem;
+import problem.Protein;
 import utilities.FileManipulator;
 
 public class Main {
@@ -32,13 +32,13 @@ public class Main {
 			initDefaultProperties();
 		}
 		
-		Algorithm algorithm;
+		TomaAlgorithm algorithm;
 		
-		Set<ProteinProblem> problems = FileManipulator.getProblemsFromFile(args[0]);
+		Set<Protein> problems = FileManipulator.getProblemsFromFile(args[0]);
 		
-		for (ProteinProblem problem : problems){
+		for (Protein problem : problems){
 			
-			algorithm = new Toma(problem);
+			algorithm = new MyTomaAlgorithm(problem);
 			
 			executor.execute(algorithm);
 		}
@@ -47,7 +47,7 @@ public class Main {
 		
 		executor.awaitTermination(1, TimeUnit.DAYS);
 		
-		for (ProteinProblem problem : problems)
+		for (Protein problem : problems)
 			System.out.println("FINISH\n" + problem);
 	}
 

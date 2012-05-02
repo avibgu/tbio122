@@ -4,24 +4,24 @@ import java.util.Date;
 
 import main.Main;
 
-import problem.ProteinProblem;
+import problem.Protein;
 
-public abstract class Algorithm implements Runnable {
+public abstract class TomaAlgorithm implements Runnable {
 
-	protected ProteinProblem mProblem;
+	protected Protein mProblem;
 	protected boolean mInitialized;
 	protected int mNumOfMoves;
 
-	public Algorithm() {
+	public TomaAlgorithm() {
 		mInitialized = false;
 	}
 
-	public Algorithm(ProteinProblem pProblem) {
+	public TomaAlgorithm(Protein pProblem) {
 		this();
 		init(pProblem);
 	}
 
-	public void init(ProteinProblem pProblem) {
+	public void init(Protein pProblem) {
 		mProblem = pProblem;
 		mInitialized = true;
 		mNumOfMoves = 0;

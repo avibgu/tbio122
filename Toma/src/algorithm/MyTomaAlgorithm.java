@@ -5,20 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import problem.Pair;
-import problem.ProteinProblem;
+import problem.Protein;
 
-public class Toma extends Algorithm {
+public class MyTomaAlgorithm extends TomaAlgorithm {
 
 	private int mOldThetaI;
 	private List<Point> mTempPositions;
 	private List<Pair> mLoops;
 
-	public Toma() {
+	public MyTomaAlgorithm() {
 		super();
 		initDataStructures();
 	}
 
-	public Toma(ProteinProblem pProblem) {
+	public MyTomaAlgorithm(Protein pProblem) {
 		super(pProblem);
 		initDataStructures();
 	}

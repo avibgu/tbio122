@@ -1,12 +1,13 @@
 package problem;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import main.Main;
 
-public class ProteinProblem extends Problem {
+public class Protein extends Problem {
 
 	private int					mN;
 	private int					mE;
@@ -17,8 +18,11 @@ public class ProteinProblem extends Problem {
 	private double[]			mF;
 	private double[]			mG;
 	private double				mCk;
-
-	public ProteinProblem(String pSequense) {
+	
+	private ArrayList<Monomer>	mMonomers;
+	private Map<Point,Monomer>	mPointToMonomer;
+	
+	public Protein(String pSequense) {
 
 		super();
 

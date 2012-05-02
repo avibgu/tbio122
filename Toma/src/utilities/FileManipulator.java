@@ -3,17 +3,17 @@ package utilities;
 import java.util.HashSet;
 import java.util.Set;
 
-import problem.ProteinProblem;
+import problem.Protein;
 
 public class FileManipulator {
 
-	public static Set<ProteinProblem> getProblemsFromFile(String pFileName) {
+	public static Set<Protein> getProblemsFromFile(String pFileName) {
 		
 		// TODO: ..
 		
-		Set<ProteinProblem> answer = new HashSet<ProteinProblem>();
+		Set<Protein> answer = new HashSet<Protein>();
 		
-		answer.add(new ProteinProblem("HHHPPHPHPHPPHPHPHPPH"));
+		answer.add(new Protein("HHHPPHPHPHPPHPHPHPPH"));
 
 		return answer;
 	}
