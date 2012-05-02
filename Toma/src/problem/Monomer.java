@@ -30,7 +30,7 @@ public class Monomer {
 	
 	@Override
 	public String toString() {
-		return mPosition.toString();
+		return "(" + (int)mPosition.getX() + "," + (int)mPosition.getY() + ")";
 	}
 	
 	public MonomerType getType() {
