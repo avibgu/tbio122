@@ -6,15 +6,17 @@ import java.util.List;
 import javax.vecmath.Vector2d;
 
 import problem.Direction;
+import problem.Monomer;
 import problem.MonomerType;
 import problem.Pair;
 import problem.Protein;
 
 public class MyTomaAlgorithm extends TomaAlgorithm {
 
-	private Direction mOldDirectionOfI;
-	private List<Vector2d> mTempPositions;
-	private List<Pair> mLoops;
+	private Direction		mOldDirectionOfI;
+	private List<Vector2d>	mTempPositions;
+	private Vector2d		mTempVector;
+	private List<Pair>		mLoops;
 
 	public MyTomaAlgorithm() {
 		super();
@@ -28,6 +30,7 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 
 	private void initDataStructures() {
 		mTempPositions = new ArrayList<Vector2d>(mProblem.getN());
+		mTempVector = new Vector2d();
 		mLoops = new ArrayList<Pair>();
 	}
 
@@ -46,7 +49,8 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 
 		double rnd = mProblem.getRandom().nextDouble();
 
-		double x = Math.exp(mProblem.getMonomer(pI).getMobility() / mProblem.getCk());
+		double x = Math.exp(mProblem.getMonomer(pI).getMobility()
+				/ mProblem.getCk());
 
 		return rnd < x;
 	}
@@ -81,7 +85,7 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 		// improvement: we can calc the Rectangles of those two Sets, and only
 		// when they collide we will perform the big check
 
-		mProblem.calcPositionsStartingFromI(pI);
+		calcPositionsStartingFromI(pI);
 
 		mTempPositions.clear();
 
@@ -93,6 +97,64 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 				return false;
 
 		return true;
+	}
+
+	private void calcPositionsStartingFromI(int pI) {
+
+		List<Monomer> monomers = mProblem.getMonomers();
+
+		if (0 == pI)
+			pI++;
+
+		for (int i = pI; i < mProblem.getN(); i++) {
+
+			Vector2d pointIminusOne = monomers.get(i - 1).getPosition();
+			Vector2d pointI = monomers.get(i).getPosition();
+
+			mTempVector.sub(pointI, pointIminusOne);
+
+			// TODO: refactor it:
+
+			Direction directionOfI = monomers.get(i).getDirection();
+
+			// we are now changing the (i+1)th Monomer
+
+			// right
+			if (mTempVector.getX() == 1) {
+
+				mTempVector.setX((0 == directionOfI.mDirection) ? mTempVector
+						.getX() : 0);
+				mTempVector.setY(mTempVector.getY() + directionOfI.mDirection);
+			}
+
+			// left
+			else if (mTempVector.getX() == -1) {
+
+				mTempVector.setX((0 == directionOfI.mDirection) ? mTempVector
+						.getX() : 0);
+				mTempVector.setY(mTempVector.getY() - directionOfI.mDirection);
+			}
+
+			// up
+			else if (mTempVector.getY() == 1) {
+
+				mTempVector.setX(mTempVector.getX() - directionOfI.mDirection);
+				mTempVector.setY((0 == directionOfI.mDirection) ? mTempVector
+						.getY() : 0);
+			}
+
+			// up
+			else if (mTempVector.getY() == 1) {
+
+				mTempVector.setX(mTempVector.getX() + directionOfI.mDirection);
+				mTempVector.setY((0 == directionOfI.mDirection) ? mTempVector
+						.getY() : 0);
+			}
+
+			monomers.get(i + 1).getPosition().set(
+					pointI.getX() + mTempVector.getX(),
+					pointI.getY() + mTempVector.getY());
+		}
 	}
 
 	@Override
@@ -152,13 +214,14 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 			length = to - from;
 
 			for (int i = from; i <= to; i++)
-				mProblem.getMonomer(i).decreaseMobility(mProblem.getCoolingValue(length));
+				mProblem.getMonomer(i).decreaseMobility(
+						mProblem.getCoolingValue(length));
 		}
 	}
 
 	@Override
 	protected void restoreStructure(int pI) {
 		mProblem.getMonomer(pI).setDirection(mOldDirectionOfI);
-		mProblem.calcPositionsStartingFromI(pI);
+		calcPositionsStartingFromI(pI);
 	}
 }

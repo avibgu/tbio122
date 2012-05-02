@@ -2,7 +2,13 @@ package problem;
 
 public enum Direction {
 
-	LEFT,
-	AHEAD,
-	RIGHT;
+	LEFT(-1),
+	AHEAD(0),
+	RIGHT(1);
+	
+	public int mDirection;
+	
+	Direction(int pDirection){
+		mDirection = pDirection;
+	}
 }

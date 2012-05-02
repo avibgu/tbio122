@@ -1,6 +1,5 @@
 package problem;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +46,6 @@ public class Protein extends Problem {
 		}
 	}
 	
-
 	// G function from the paper
 	public double getCoolingValue(int pK) {
 		// improvement: return 20 / (pK + 17);
@@ -122,74 +120,5 @@ public class Protein extends Problem {
 	
 	public Monomer getMonomerFromVector2d(Vector2d pVector2d) {
 		return mVector2dToMonomer.get(pVector2d);
-	}
-	
-	
-	
-	// TODO: do it better, usinf Vector2d
-	
-	public void calcPositionsStartingFromI(int pIndex) {
-
-		if (0 == pIndex)
-			pIndex++;
-		
-		int xI = (int) getPosition(pIndex).getX();
-		int yI = (int) getPosition(pIndex).getY();
-
-		int xImOne = (int) getPosition(pIndex - 1).getX();
-		int yImOne = (int) getPosition(pIndex - 1).getY();
-
-		// 1 = 'right', -1 = 'left', 0 = 'up' or 'down'
-		int i = xI - xImOne;
-
-		// 1 = 'up', -1 = 'down', 0 = 'right' or 'left'
-		int j = yI - yImOne;
-
-		calcPosition(pIndex + 1, xI, yI, i, j);
-	}
-
-	private void calcPosition(int pIndex, int xImOne, int yImOne, int previousI,
-			int previousJ) {
-
-		int i = 0;
-		int j = 0;
-
-		if (getN() == pIndex)
-			return;
-
-		// right
-		if (1 == previousI) {
-
-			i = (getThetaI(pIndex) == 0) ? previousI : 0;
-			j += getThetaI(pIndex);
-		}
-
-		// left
-		else if (-1 == previousI) {
-
-			i = (getThetaI(pIndex) == 0) ? previousI : 0;
-			j -= getThetaI(pIndex);
-		}
-
-		// up
-		else if (1 == previousJ) {
-
-			i -= getThetaI(pIndex);
-			j = (getThetaI(pIndex) == 0) ? previousJ : 0;
-		}
-
-		// down
-		else if (-1 == previousJ) {
-
-			i += getThetaI(pIndex);
-			j = (getThetaI(pIndex) == 0) ? previousJ : 0;
-		}
-
-		setPosition(pIndex, xImOne + i, yImOne + j);
-
-		int xI = (int) getPosition(pIndex).getX();
-		int yI = (int) getPosition(pIndex).getY();
-
-		calcPosition(pIndex + 1, xI, yI, i, j);
 	}
 }
