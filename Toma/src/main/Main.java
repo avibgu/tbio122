@@ -18,57 +18,41 @@ public class Main {
 
 	public static final Properties prop = new Properties();
 
-	public static void main(String[] args) throws Exception{
-		
+	public static void main(String[] args) throws Exception {
+
 		ExecutorService executor = Executors.newFixedThreadPool(5);
-		
-		try {
-		
-			initPropertiesFromFile(args[1]);
-		}
-		
-		catch (Exception e) {
-			
-			initDefaultProperties();
-		}
-		
+
+		initPropertiesFromFile(args[1]);
+
 		TomaAlgorithm algorithm;
-		
+
 		Set<Protein> problems = FileManipulator.getProblemsFromFile(args[0]);
-		
-		for (Protein problem : problems){
-			
+
+		for (Protein problem : problems) {
+
 			algorithm = new MyTomaAlgorithm(problem);
-			
+
 			executor.execute(algorithm);
 		}
-		
+
 		executor.shutdown();
-		
+
 		executor.awaitTermination(1, TimeUnit.DAYS);
-		
+
 		for (Protein problem : problems)
 			System.out.println("FINISH\n" + problem);
 	}
 
-	private static void initPropertiesFromFile(String pPropertiesFileLocation) throws Exception{
+	private static void initPropertiesFromFile(String pPropertiesFileLocation)
+			throws Exception {
 
 		prop.load(new FileInputStream(new File(pPropertiesFileLocation)));
-		
-		if (null == prop.getProperty("SEED"))
-			prop.setProperty("SEED","17");
-		
-		if (null == prop.getProperty("NUM_OF_RUNS"))
-			prop.setProperty("NUM_OF_RUNS","10000");
-		
-		if (null == prop.getProperty("CK"))
-			prop.setProperty("CK","0.36");
-	}
-	
-	private static void initDefaultProperties() {
 
-		prop.setProperty("SEED","17");
-		prop.setProperty("NUM_OF_RUNS","10000");
-		prop.setProperty("CK","0.36");
+		if (null == prop.getProperty("SEED")
+				|| null == prop.getProperty("NUM_OF_RUNS")
+				|| null == prop.getProperty("CK")) {
+
+			throw new Exception("Please provide a valid Properties file.");
+		}
 	}
 }

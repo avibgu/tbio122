@@ -106,7 +106,7 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 		if (0 == pI)
 			pI++;
 
-		for (int i = pI; i < mProblem.getN(); i++) {
+		for (int i = pI; i < mProblem.getN() - 1; i++) {
 
 			Vector2d pointIminusOne = monomers.get(i - 1).getPosition();
 			Vector2d pointI = monomers.get(i).getPosition();
