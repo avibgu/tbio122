@@ -7,9 +7,9 @@ public class Monomer {
 	private MonomerType mType;
 	private Vector2d	mPosition;
 	private Direction	mDirection;	// Theta
-	private double		mF;			// F
-	private double		mG;			// G
-	
+	private double		mMobility;	// F
+	private int			mIndex;
+
 	public Monomer(char pType, Vector2d pPosition, int pIndex) {
 
 		if ('h' == pType || 'H' == pType) 
@@ -20,10 +20,17 @@ public class Monomer {
 		
 		mPosition = pPosition;
 		mDirection = Direction.AHEAD;
-		mF = 0;
-		
-		// improvement: mG = 20 / (pIndex + 17);
-		mG = pIndex;
+		mMobility = 0;
+		mIndex = pIndex;
+	}
+	
+	public void decreaseMobility(double pCoolingValue) {
+		mMobility -= pCoolingValue;
+	}
+	
+	@Override
+	public String toString() {
+		return mPosition.toString();
 	}
 	
 	public MonomerType getType() {
@@ -50,19 +57,19 @@ public class Monomer {
 		mDirection = pDirection;
 	}
 
-	public double getF() {
-		return mF;
+	public double getMobility() {
+		return mMobility;
 	}
 
-	public void setF(double pF) {
-		mF = pF;
+	public void setMobility(double pMobility) {
+		mMobility = pMobility;
 	}
 
-	public double getG() {
-		return mG;
+	public int getIndex() {
+		return mIndex;
 	}
 
-	public void setG(double pG) {
-		mG = pG;
-	}
+	public void setIndex(int pIndex) {
+		mIndex = pIndex;
+	}	
 }

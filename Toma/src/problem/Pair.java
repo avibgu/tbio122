@@ -2,20 +2,19 @@ package problem;
 
 public class Pair {
 
-	private int mFirst;
-	private int mSecond;
-	
-	public Pair(int pFirst, int pSecond) {
-		mFirst = pFirst;
-		mSecond = pSecond;
+	private Monomer mFirst;
+	private Monomer mSecond;
+
+	public Pair(Monomer pFirstMonomer, Monomer pSecondMonomer) {
+		mFirst = pFirstMonomer;
+		mSecond = pSecondMonomer;
 	}
 
-	public int getFirst() {
+	public Monomer getFirst() {
 		return mFirst;
 	}
 
-	public int getSecond() {
+	public Monomer getSecond() {
 		return mSecond;
 	}
-
 }

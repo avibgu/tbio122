@@ -1,16 +1,19 @@
 package algorithm;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Vector2d;
+
+import problem.Direction;
+import problem.MonomerType;
 import problem.Pair;
 import problem.Protein;
 
 public class MyTomaAlgorithm extends TomaAlgorithm {
 
-	private int mOldThetaI;
-	private List<Point> mTempPositions;
+	private Direction mOldDirectionOfI;
+	private List<Vector2d> mTempPositions;
 	private List<Pair> mLoops;
 
 	public MyTomaAlgorithm() {
@@ -24,10 +27,10 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 	}
 
 	private void initDataStructures() {
-		mTempPositions = new ArrayList<Point>(mProblem.getN());
+		mTempPositions = new ArrayList<Vector2d>(mProblem.getN());
 		mLoops = new ArrayList<Pair>();
 	}
-	
+
 	@Override
 	protected int selectResidueRandomly() {
 		return (int) (mProblem.getRandom().nextDouble() * (mProblem.getN() - 1));
@@ -43,7 +46,7 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 
 		double rnd = mProblem.getRandom().nextDouble();
 
-		double x = Math.exp(mProblem.getF(pI) / mProblem.getCk());
+		double x = Math.exp(mProblem.getMonomer(pI).getMobility() / mProblem.getCk());
 
 		return rnd < x;
 	}
@@ -57,17 +60,17 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 
 		double rnd = mProblem.getRandom().nextDouble();
 
-		int newThetaI = 0;
+		Direction newThetaI = Direction.AHEAD;
 
 		if (rnd <= 0.3)
-			newThetaI = -1;
+			newThetaI = Direction.LEFT;
 
 		else if (rnd >= 0.6)
-			newThetaI = 1;
+			newThetaI = Direction.RIGHT;
 
-		mOldThetaI = mProblem.getThetaI(pI);
+		mOldDirectionOfI = mProblem.getMonomer(pI).getDirection();
 
-		mProblem.setThetaI(pI, newThetaI);
+		mProblem.getMonomer(pI).setDirection(newThetaI);
 	}
 
 	@Override
@@ -83,10 +86,10 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 		mTempPositions.clear();
 
 		for (int i = 0; i <= pI; i++)
-			mTempPositions.add(mProblem.getPosition(i));
+			mTempPositions.add(mProblem.getMonomer(pI).getPosition());
 
 		for (int i = pI + 1; i < mProblem.getN(); i++)
-			if (mTempPositions.contains(mProblem.getPosition(i)))
+			if (mTempPositions.contains(mProblem.getMonomer(pI).getPosition()))
 				return false;
 
 		return true;
@@ -99,19 +102,20 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 		mLoops.clear();
 
 		for (int i = 0; i < mProblem.getN(); i++)
-			if (mProblem.getType(i) == 'H')
-				mTempPositions.add(mProblem.getPosition(i));
+			if (mProblem.getMonomer(i).getType() == MonomerType.H)
+				mTempPositions.add(mProblem.getMonomer(i).getPosition());
 
 		for (int i = 0; i < mTempPositions.size(); i++) {
 
-			Point x = mTempPositions.get(i);
+			Vector2d x = mTempPositions.get(i);
 
-			for (int j = i + 1; j < mTempPositions.size(); j++){
-				
-				Point y = mTempPositions.get(j);
-				
+			for (int j = i + 1; j < mTempPositions.size(); j++) {
+
+				Vector2d y = mTempPositions.get(j);
+
 				if (!mProblem.isNeighbors(x, y))
-					mLoops.add(new Pair(mProblem.getPointIndex(x),mProblem.getPointIndex(y)));
+					mLoops.add(new Pair(mProblem.getMonomerFromVector2d(x),
+							mProblem.getMonomerFromVector2d(y)));
 			}
 		}
 
@@ -130,31 +134,31 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 	protected void updateF() {
 		// do this for all the residues that participates in loops
 		// we should avoid double-counting
-		
+
 		int tmp;
 		int length;
-		
-		for (Pair loop : mLoops){
-			
-			int from = loop.getFirst();
-			int to = loop.getSecond();
-			
-			if (from > to){
+
+		for (Pair loop : mLoops) {
+
+			int from = loop.getFirst().getIndex();
+			int to = loop.getSecond().getIndex();
+
+			if (from > to) {
 				tmp = to;
 				to = from;
 				from = tmp;
 			}
-			
+
 			length = to - from;
-			
+
 			for (int i = from; i <= to; i++)
-				mProblem.decreaseF(i, mProblem.getG(length));
+				mProblem.getMonomer(i).decreaseMobility(mProblem.getCoolingValue(length));
 		}
 	}
 
 	@Override
 	protected void restoreStructure(int pI) {
-		mProblem.setThetaI(pI, mOldThetaI);
+		mProblem.getMonomer(pI).setDirection(mOldDirectionOfI);
 		mProblem.calcPositionsStartingFromI(pI);
 	}
 }

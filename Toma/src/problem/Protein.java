@@ -3,7 +3,10 @@ package problem;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.vecmath.Vector2d;
 
 import main.Main;
 
@@ -11,16 +14,10 @@ public class Protein extends Problem {
 
 	private int					mN;
 	private int					mE;
-	private char[]				mSequense;
-	private Point[]				mPositions;
-	private Map<Point,Integer>	mPointToIndex;
-	private int[]				mTheta;
-	private double[]			mF;
-	private double[]			mG;
 	private double				mCk;
-	
-	private ArrayList<Monomer>	mMonomers;
-	private Map<Point,Monomer>	mPointToMonomer;
+
+	private List<Monomer>			mMonomers;
+	private Map<Vector2d,Monomer>	mVector2dToMonomer;
 	
 	public Protein(String pSequense) {
 
@@ -28,38 +25,55 @@ public class Protein extends Problem {
 
 		setN(pSequense.length());
 		setE(0);
-		setSequense(pSequense.toCharArray());
-		initPositions();
-		setTheta(new int[mN]);
-		setF(new double[mN]);
-
-		initG();
-
 		setCk(Double.parseDouble(Main.prop.getProperty("CK")));
+		initMonomers(pSequense);
 	}
-
-	protected void initPositions() {
-
-		setPositions(new Point[getN()]);
-		setPointToIndex(new HashMap<Point, Integer>(getN()));
+	
+	
+	private void initMonomers(String pSequense) {
+	
+		mMonomers = new ArrayList<Monomer>(getN());
+		mVector2dToMonomer = new HashMap<Vector2d,Monomer>();
 		
-		for (int i = 0; i < getN(); i++){
+		char[] sequense = pSequense.toCharArray();
+		
+		for (int i = 0; i < sequense.length; i++){
 			
-			Point point = new Point(i, 0);
+			Vector2d vector = new Vector2d(i,0);
+			Monomer monomer = new Monomer(sequense[i], vector, i);
 			
-			mPositions[i] = point;
-			getPointToIndex().put(point, i);
+			mMonomers.add(monomer);
+			mVector2dToMonomer.put(vector, monomer);
 		}
 	}
+	
 
-	private void initG() {
+	// G function from the paper
+	public double getCoolingValue(int pK) {
+		// improvement: return 20 / (pK + 17);
+		return(1);
+	}
+	
+	public boolean isNeighbors(Vector2d pX, Vector2d pY) {
 
-		setG(new double[mN]);
+		int difference = getMonomerFromVector2d(pX).getIndex() - getMonomerFromVector2d(pY).getIndex();
+		
+		return (-1 == difference || 1 == difference);
+	}
+	
+	@Override
+	public String toString() {
 
-		for (int i = 0; i < mN; i++)
-			setG(i, 1);
-
-		// improvement: setG(i,(20 / (i + 17)));
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Energy: " + getE() + "\n");
+		
+		for (Monomer monomer : mMonomers)
+			sb.append(monomer + " ");
+		
+		sb.append("\n");
+		
+		return sb.toString();
 	}
 
 	public int getN() {
@@ -77,90 +91,6 @@ public class Protein extends Problem {
 	public void setE(int pE) {
 		mE = pE;
 	}
-
-	public char[] getSequense() {
-		return mSequense;
-	}
-
-	public void setSequense(char[] pSequense) {
-		mSequense = pSequense;
-	}
-	
-	public char getType(int pIndex) {
-		return mSequense[pIndex];
-	}
-
-	public Point[] getPositions() {
-		return mPositions;
-	}
-
-	public void setPositions(Point[] pPositions) {
-		mPositions = pPositions;
-	}
-
-	public Point getPosition(int pIndex) {
-		return mPositions[pIndex];
-	}
-
-	public void setPosition(int pIndex, int pX, int pY) {
-		mPositions[pIndex].setLocation(pX, pY);
-	}
-
-	public Map<Point,Integer> getPointToIndex() {
-		return mPointToIndex;
-	}
-
-	public void setPointToIndex(Map<Point,Integer> pointToIndex) {
-		mPointToIndex = pointToIndex;
-	}
-	
-	public int getPointIndex(Point pPoint){
-		return mPointToIndex.get(pPoint);
-	}
-
-	public int[] getTheta() {
-		return mTheta;
-	}
-
-	public void setTheta(int[] pTheta) {
-		mTheta = pTheta;
-	}
-
-	public double[] getF() {
-		return mF;
-	}
-
-	public void setF(double[] pF) {
-		mF = pF;
-	}
-
-	public double getF(int pI) {
-		return getF()[pI];
-	}
-	
-	public void setF(int pI, double pValue) {
-		getF()[pI] = pValue;
-	}
-	
-	public void decreaseF(int pI, double pValue) {
-		setF(pI, getF(pI) - pValue);
-	}
-	
-	public double[] getG() {
-		return mG;
-	}
-
-	public void setG(double[] pG) {
-		mG = pG;
-	}
-
-	public void setG(int pI, int pValue) {
-		getG()[pI] = pValue;
-	}
-	
-	public double getG(int pI) {
-		return getG()[pI];
-	}
 	
 	public double getCk() {
 		return mCk;
@@ -170,14 +100,34 @@ public class Protein extends Problem {
 		mCk = pCk;
 	}
 
-	public int getThetaI(int pI) {
-		return getTheta()[pI];
+	public List<Monomer> getMonomers() {
+		return mMonomers;
 	}
 
-	public void setThetaI(int pI, int pValue) {
-		getTheta()[pI] = pValue;
+	public void setMonomers(List<Monomer> pMonomers) {
+		mMonomers = pMonomers;
+	}
+	
+	public Monomer getMonomer(int pIndex){
+		return mMonomers.get(pIndex);
 	}
 
+	public Map<Vector2d, Monomer> getVector2dToMonomer() {
+		return mVector2dToMonomer;
+	}
+
+	public void setVector2dToMonomer(Map<Vector2d, Monomer> pVector2dToMonomer) {
+		mVector2dToMonomer = pVector2dToMonomer;
+	}
+	
+	public Monomer getMonomerFromVector2d(Vector2d pVector2d) {
+		return mVector2dToMonomer.get(pVector2d);
+	}
+	
+	
+	
+	// TODO: do it better, usinf Vector2d
+	
 	public void calcPositionsStartingFromI(int pIndex) {
 
 		if (0 == pIndex)
@@ -241,27 +191,5 @@ public class Protein extends Problem {
 		int yI = (int) getPosition(pIndex).getY();
 
 		calcPosition(pIndex + 1, xI, yI, i, j);
-	}
-
-	public boolean isNeighbors(Point pX, Point pY) {
-
-		int difference = getPointIndex(pX) - getPointIndex(pY);
-		
-		return (-1 == difference || 1 == difference);
-	}
-	
-	@Override
-	public String toString() {
-
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("Energy: " + getE() + "\n");
-		
-		for (Point point : mPositions)
-			sb.append("(" + (int)point.getX() +"," + (int)point.getY() + ")" + " ");
-		
-		sb.append("\n");
-		
-		return sb.toString();
 	}
 }
