@@ -3,15 +3,15 @@
 //import problem.Protein;
 //
 //@Deprecated
-//public class AlgorithmImpl extends TomaAlgorithm {
+//public class OtherAlgorithmImpl extends TomaAlgorithm {
 //
 //	private int mOldThetaI;
 //
-//	public AlgorithmImpl() {
+//	public OtherAlgorithmImpl() {
 //		super();
 //	}
 //
-//	public AlgorithmImpl(Protein pProblem) {
+//	public OtherAlgorithmImpl(Protein pProblem) {
 //		super(pProblem);
 //	}
 //
