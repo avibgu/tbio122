@@ -13,7 +13,7 @@ public class FileManipulator {
 		
 		Set<Protein> answer = new HashSet<Protein>();
 		
-		answer.add(new Protein("HHHPPHPHPHPPHPHPHPPH"));
+		answer.add(new Protein("HPPH"));
 
 		return answer;
 	}
