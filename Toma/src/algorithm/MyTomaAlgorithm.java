@@ -29,14 +29,14 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 	}
 
 	private void initDataStructures() {
-		mTempPositions = new ArrayList<Vector2d>(mProblem.getN());
+		mTempPositions = new ArrayList<Vector2d>(mProblem.getNumOfMonomers());
 		mTempVector = new Vector2d();
 		mLoops = new ArrayList<Pair>();
 	}
 
 	@Override
 	protected int selectResidueRandomly() {
-		return (int) (mProblem.getRandom().nextDouble() * (mProblem.getN() - 1));
+		return (int) (mProblem.getRandom().nextDouble() * (mProblem.getNumOfMonomers() - 1));
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 		double rnd = mProblem.getRandom().nextDouble();
 
 		double x = Math.exp(mProblem.getMonomer(pI).getMobility()
-				/ mProblem.getCk());
+				/ mProblem.getTemperature());
 
 		return rnd < x;
 	}
@@ -92,7 +92,7 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 		for (int i = 0; i <= pI; i++)
 			mTempPositions.add(mProblem.getMonomer(pI).getPosition());
 
-		for (int i = pI + 1; i < mProblem.getN(); i++)
+		for (int i = pI + 1; i < mProblem.getNumOfMonomers(); i++)
 			if (mTempPositions.contains(mProblem.getMonomer(pI).getPosition()))
 				return false;
 
@@ -106,7 +106,7 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 		if (0 == pI)
 			pI++;
 
-		for (int i = pI; i < mProblem.getN() - 1; i++) {
+		for (int i = pI; i < mProblem.getNumOfMonomers() - 1; i++) {
 
 			Vector2d pointIminusOne = monomers.get(i - 1).getPosition();
 			Vector2d pointI = monomers.get(i).getPosition();
@@ -163,7 +163,7 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 		mTempPositions.clear();
 		mLoops.clear();
 
-		for (int i = 0; i < mProblem.getN(); i++)
+		for (int i = 0; i < mProblem.getNumOfMonomers(); i++)
 			if (mProblem.getMonomer(i).getType() == MonomerType.H)
 				mTempPositions.add(mProblem.getMonomer(i).getPosition());
 
@@ -181,13 +181,13 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 			}
 		}
 
-		mProblem.setE(-mLoops.size());
+		mProblem.setEnergy(-mLoops.size());
 	}
 
 	@Override
 	protected void decreaseTemperature() {
 		// should be performed due to some cooling strategy
-		mProblem.setCk(mProblem.getCk() * 0.999999);
+		mProblem.setTemperature(mProblem.getTemperature() * 0.999999);
 
 		// improvement: mProblem.setCk((0.3 * nH) / (0.5 * (nH + nP)));
 	}

@@ -11,9 +11,9 @@ import main.Main;
 
 public class Protein extends Problem {
 
-	private int					mN;
-	private int					mE;
-	private double				mCk;
+	private int					mNumOfMonomers;
+	private int					mEnergy;		// E
+	private double				mTemperature;	// Ck
 
 	private List<Monomer>			mMonomers;
 	private Map<Vector2d,Monomer>	mVector2dToMonomer;
@@ -22,16 +22,16 @@ public class Protein extends Problem {
 
 		super();
 
-		setN(pSequense.length());
-		setE(0);
-		setCk(Double.parseDouble(Main.prop.getProperty("CK")));
+		setNumOfMonomers(pSequense.length());
+		setEnergy(0);
+		setTemperature(Double.parseDouble(Main.prop.getProperty("CK")));
 		initMonomers(pSequense);
 	}
 	
 	
 	private void initMonomers(String pSequense) {
 	
-		mMonomers = new ArrayList<Monomer>(getN());
+		mMonomers = new ArrayList<Monomer>(getNumOfMonomers());
 		mVector2dToMonomer = new HashMap<Vector2d,Monomer>();
 		
 		char[] sequense = pSequense.toCharArray();
@@ -64,7 +64,7 @@ public class Protein extends Problem {
 
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Energy: " + getE() + "\n");
+		sb.append("Energy: " + getEnergy() + "\n");
 		
 		for (Monomer monomer : mMonomers)
 			sb.append(monomer + " ");
@@ -74,28 +74,28 @@ public class Protein extends Problem {
 		return sb.toString();
 	}
 
-	public int getN() {
-		return mN;
+	public int getNumOfMonomers() {
+		return mNumOfMonomers;
 	}
 
-	public void setN(int pN) {
-		mN = pN;
+	public void setNumOfMonomers(int pN) {
+		mNumOfMonomers = pN;
 	}
 
-	public int getE() {
-		return mE;
+	public int getEnergy() {
+		return mEnergy;
 	}
 
-	public void setE(int pE) {
-		mE = pE;
+	public void setEnergy(int pE) {
+		mEnergy = pE;
 	}
 	
-	public double getCk() {
-		return mCk;
+	public double getTemperature() {
+		return mTemperature;
 	}
 
-	public void setCk(double pCk) {
-		mCk = pCk;
+	public void setTemperature(double pTemperature) {
+		mTemperature = pTemperature;
 	}
 
 	public List<Monomer> getMonomers() {
