@@ -8,7 +8,7 @@ import problem.Protein;
 
 public abstract class TomaAlgorithm implements Runnable {
 
-	protected Protein mProblem;
+	protected Protein mProtein;
 	protected boolean mInitialized;
 	protected int mNumOfMoves;
 
@@ -16,13 +16,13 @@ public abstract class TomaAlgorithm implements Runnable {
 		mInitialized = false;
 	}
 
-	public TomaAlgorithm(Protein pProblem) {
+	public TomaAlgorithm(Protein pProtein) {
 		this();
-		init(pProblem);
+		init(pProtein);
 	}
 
-	public void init(Protein pProblem) {
-		mProblem = pProblem;
+	public void init(Protein pProtein) {
+		mProtein = pProtein;
 		mInitialized = true;
 		mNumOfMoves = 0;
 	}
@@ -38,14 +38,14 @@ public abstract class TomaAlgorithm implements Runnable {
 
 		int numOfRuns = Integer.parseInt(Main.prop.getProperty("NUM_OF_RUNS"));
 
-		mProblem.setStartTime(new Date());
+		mProtein.setStartTime(new Date());
 
 		// i Assume that the initial state is extended structure
 
 		while (numOfRuns-- > 0) {
 
 			//TODO: just for debug..
-			System.out.println(numOfRuns + ": " + mProblem);
+			System.out.println(numOfRuns + ": " + mProtein);
 			
 			int i = selectResidueRandomly();
 
@@ -64,9 +64,9 @@ public abstract class TomaAlgorithm implements Runnable {
 			}
 		}
 
-		mProblem.setEndTime(new Date());
+		mProtein.setEndTime(new Date());
 
-		mProblem.markAsSolved();
+		mProtein.markAsSolved();
 	}
 
 	protected void countThisMove() {

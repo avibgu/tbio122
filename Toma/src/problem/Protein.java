@@ -52,13 +52,6 @@ public class Protein extends Problem {
 		return(1);
 	}
 	
-	public boolean isNeighbors(Vector2d pX, Vector2d pY) {
-
-		int difference = getMonomerFromVector2d(pX).getIndex() - getMonomerFromVector2d(pY).getIndex();
-		
-		return (-1 == difference || 1 == difference);
-	}
-	
 	@Override
 	public String toString() {
 
