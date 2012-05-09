@@ -194,6 +194,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 					// TODO: improve this data-structure.. !!!
 					// every Monomer can start or end up to 3 loops
+					// (don't use new!!..)
 					mLoops.add(new Pair(monomer, neighborMonomer));
 			}
 		}
@@ -222,19 +223,12 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		// do this for all the residues that participates in loops
 		// we should avoid double-counting
 
-		int tmp;
 		int length;
 
 		for (Pair loop : mLoops) {
 
 			int from = loop.getFirst().getIndex();
 			int to = loop.getSecond().getIndex();
-
-			if (from > to) {
-				tmp = to;
-				to = from;
-				from = tmp;
-			}
 
 			length = to - from;
 
