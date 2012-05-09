@@ -2,6 +2,7 @@ package algorithm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.vecmath.Vector2d;
 
@@ -13,10 +14,10 @@ import problem.Protein;
 
 public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
-	private Direction		mOldDirectionOfI;
-	private List<Vector2d>	mHPositions;
-	private Vector2d		mTempVector;
-	private List<Pair>		mLoops;
+	private Direction mOldDirectionOfI;
+	private List<Vector2d> mTempPositions;
+	private Vector2d mTempVector;
+	private List<Pair> mLoops;
 
 	public ConcreteTomaAlgorithm() {
 		super();
@@ -29,14 +30,15 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	}
 
 	private void initDataStructures() {
-		mHPositions = new ArrayList<Vector2d>(mProblem.getNumOfMonomers());
+		mTempPositions = new ArrayList<Vector2d>(mProblem.getNumOfMonomers());
 		mTempVector = new Vector2d();
 		mLoops = new ArrayList<Pair>();
 	}
 
 	@Override
 	protected int selectResidueRandomly() {
-		return (int) (mProblem.getRandom().nextDouble() * (mProblem.getNumOfMonomers() - 1));
+		return (int) (mProblem.getRandom().nextDouble() * (mProblem
+				.getNumOfMonomers() - 1));
 	}
 
 	@Override
@@ -85,105 +87,113 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		// improvement: we can calc the Rectangles of those two Sets, and only
 		// when they collide we will perform the big check
 
-		calcPositionsStartingFromI(pI);
+		calcPositionsStartingFromThisMonomer(pI);
 
-		mHPositions.clear();
+		mTempPositions.clear();
 
 		for (int i = 0; i <= pI; i++)
-			mHPositions.add(mProblem.getMonomer(pI).getPosition());
+			mTempPositions.add(mProblem.getMonomer(pI).getPosition());
 
 		for (int i = pI + 1; i < mProblem.getNumOfMonomers(); i++)
-			if (mHPositions.contains(mProblem.getMonomer(pI).getPosition()))
+			if (mTempPositions.contains(mProblem.getMonomer(pI).getPosition()))
 				return false;
 
 		return true;
 	}
 
-	private void calcPositionsStartingFromI(int pI) {
+	private void calcPositionsStartingFromThisMonomer(int pMonomerIndex) {
 
-		List<Monomer> monomers = mProblem.getMonomers();
+		if (2 > pMonomerIndex)
+			pMonomerIndex = 2;
 
-		if (0 == pI)
-			pI++;
+		Vector2d pointIminusOne = mProblem.getMonomers().get(pMonomerIndex - 1)
+				.getPosition();
+		Vector2d pointIminusTwo = mProblem.getMonomers().get(pMonomerIndex - 2)
+				.getPosition();
 
-		for (int i = pI; i < mProblem.getNumOfMonomers() - 1; i++) {
+		mTempVector.sub(pointIminusOne, pointIminusTwo);
 
-			Vector2d pointIminusOne = monomers.get(i - 1).getPosition();
-			Vector2d pointI = monomers.get(i).getPosition();
+		calcPositionsStartingFromThisMonomerRecursivly(pMonomerIndex,
+				pointIminusOne, mTempVector);
+	}
 
-			mTempVector.sub(pointI, pointIminusOne);
+	private void calcPositionsStartingFromThisMonomerRecursivly(int pI,
+			Vector2d pPointIminusOne, Vector2d pDirectionsVector) {
 
-			// TODO: refactor it:
+		if (mProblem.getNumOfMonomers() - 1 == pI)
+			return;
 
-			Direction directionOfI = monomers.get(i).getDirection();
+		Vector2d pointI = mProblem.getMonomers().get(pI).getPosition();
 
-			// we are now changing the (i+1)th Monomer
+		Direction directionOfI = mProblem.getMonomers().get(pI).getDirection();
 
-			// right
-			if (mTempVector.getX() == 1) {
+		if (Direction.LEFT == directionOfI)
+			turnDirectionVectorLeft(pDirectionsVector);
 
-				mTempVector.setX((0 == directionOfI.mDirection) ? mTempVector
-						.getX() : 0);
-				mTempVector.setY(mTempVector.getY() + directionOfI.mDirection);
-			}
+		else if (Direction.LEFT == directionOfI)
+			turnDirectionVectorRight(pDirectionsVector);
 
-			// left
-			else if (mTempVector.getX() == -1) {
+		mProblem.getMonomers()
+				.get(pI + 1)
+				.getPosition()
+				.set(pointI.getX() + mTempVector.getX(),
+						pointI.getY() + mTempVector.getY());
 
-				mTempVector.setX((0 == directionOfI.mDirection) ? mTempVector
-						.getX() : 0);
-				mTempVector.setY(mTempVector.getY() - directionOfI.mDirection);
-			}
+		calcPositionsStartingFromThisMonomerRecursivly(pI + 1, pointI,
+				pDirectionsVector);
+	}
 
-			// up
-			else if (mTempVector.getY() == 1) {
+	private void turnDirectionVectorLeft(Vector2d pDirectionsVector) {
 
-				mTempVector.setX(mTempVector.getX() - directionOfI.mDirection);
-				mTempVector.setY((0 == directionOfI.mDirection) ? mTempVector
-						.getY() : 0);
-			}
+		double x = pDirectionsVector.getX();
+		double y = pDirectionsVector.getY();
 
-			// up
-			else if (mTempVector.getY() == 1) {
+		pDirectionsVector.set(-y, x);
+	}
 
-				mTempVector.setX(mTempVector.getX() + directionOfI.mDirection);
-				mTempVector.setY((0 == directionOfI.mDirection) ? mTempVector
-						.getY() : 0);
-			}
+	private void turnDirectionVectorRight(Vector2d pDirectionsVector) {
 
-			monomers.get(i + 1).getPosition().set(
-					pointI.getX() + mTempVector.getX(),
-					pointI.getY() + mTempVector.getY());
-		}
+		double x = pDirectionsVector.getX();
+		double y = pDirectionsVector.getY();
+
+		pDirectionsVector.set(y, -x);
 	}
 
 	@Override
 	protected void evaluateStructureEnergy() {
 
-		mHPositions.clear();
 		mLoops.clear();
 
-		for (int i = 0; i < mProblem.getNumOfMonomers(); i++)
-			if (mProblem.getMonomer(i).getType() == MonomerType.H)
-				mHPositions.add(mProblem.getMonomer(i).getPosition());
+		for (int i = 0; i < mProblem.getNumOfMonomers(); i++) {
 
-		for (int i = 0; i < mHPositions.size(); i++) {
+			Monomer monomer = mProblem.getMonomer(i);
 
-			Vector2d x = mHPositions.get(i);
+			if (monomer.getType() == MonomerType.P)
+				continue;
 
-			for (int j = i + 1; j < mHPositions.size(); j++) {
+			Set<Vector2d> potencialsNeighbors = getPotencialsNeighbors(monomer
+					.getPosition());
 
-				Vector2d y = mHPositions.get(j);
+			for (Vector2d pn : potencialsNeighbors) {
 
-				if (!mProblem.isNeighbors(x, y))
-					mLoops.add(new Pair(mProblem.getMonomerFromVector2d(x),
-							mProblem.getMonomerFromVector2d(y)));
+				Monomer neighborMonomer = mProblem.getMonomerFromVector2d(pn);
+
+				// i + 1 => for only monomers that are greater than me, and not
+				// connected directly to me
+				if (null != neighborMonomer
+						&& neighborMonomer.getIndex() > (i + 1)
+						&& neighborMonomer.getType() == MonomerType.H)
+
+					mLoops.add(new Pair(monomer, neighborMonomer));
 			}
 		}
-		
-		//TODO: use the map inorder to get in in O(N)
 
 		mProblem.setEnergy(-mLoops.size());
+	}
+
+	private Set<Vector2d> getPotencialsNeighbors(Vector2d pPosition) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -219,13 +229,13 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 				mProblem.getMonomer(i).decreaseMobility(
 						mProblem.getCoolingValue(length));
 		}
-		
-		//TODO: my project is improving F..
+
+		// TODO: my project is improving F..
 	}
 
 	@Override
 	protected void restoreStructure(int pI) {
 		mProblem.getMonomer(pI).setDirection(mOldDirectionOfI);
-		calcPositionsStartingFromI(pI);
+		calcPositionsStartingFromThisMonomer(pI);
 	}
 }
