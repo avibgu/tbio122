@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import algorithm.TomaAlgorithm;
-import algorithm.MyTomaAlgorithm;
+import algorithm.ConcreteTomaAlgorithm;
 
 import problem.Protein;
 import utilities.FileManipulator;
@@ -30,7 +30,7 @@ public class Main {
 
 		for (Protein problem : problems) {
 
-			algorithm = new MyTomaAlgorithm(problem);
+			algorithm = new ConcreteTomaAlgorithm(problem);
 
 			executor.execute(algorithm);
 		}

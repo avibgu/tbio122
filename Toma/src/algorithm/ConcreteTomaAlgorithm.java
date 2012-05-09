@@ -11,19 +11,19 @@ import problem.MonomerType;
 import problem.Pair;
 import problem.Protein;
 
-public class MyTomaAlgorithm extends TomaAlgorithm {
+public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	private Direction		mOldDirectionOfI;
 	private List<Vector2d>	mHPositions;
 	private Vector2d		mTempVector;
 	private List<Pair>		mLoops;
 
-	public MyTomaAlgorithm() {
+	public ConcreteTomaAlgorithm() {
 		super();
 		initDataStructures();
 	}
 
-	public MyTomaAlgorithm(Protein pProblem) {
+	public ConcreteTomaAlgorithm(Protein pProblem) {
 		super(pProblem);
 		initDataStructures();
 	}
