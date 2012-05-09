@@ -14,7 +14,7 @@ import problem.Protein;
 public class MyTomaAlgorithm extends TomaAlgorithm {
 
 	private Direction		mOldDirectionOfI;
-	private List<Vector2d>	mTempPositions;
+	private List<Vector2d>	mHPositions;
 	private Vector2d		mTempVector;
 	private List<Pair>		mLoops;
 
@@ -29,7 +29,7 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 	}
 
 	private void initDataStructures() {
-		mTempPositions = new ArrayList<Vector2d>(mProblem.getNumOfMonomers());
+		mHPositions = new ArrayList<Vector2d>(mProblem.getNumOfMonomers());
 		mTempVector = new Vector2d();
 		mLoops = new ArrayList<Pair>();
 	}
@@ -87,13 +87,13 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 
 		calcPositionsStartingFromI(pI);
 
-		mTempPositions.clear();
+		mHPositions.clear();
 
 		for (int i = 0; i <= pI; i++)
-			mTempPositions.add(mProblem.getMonomer(pI).getPosition());
+			mHPositions.add(mProblem.getMonomer(pI).getPosition());
 
 		for (int i = pI + 1; i < mProblem.getNumOfMonomers(); i++)
-			if (mTempPositions.contains(mProblem.getMonomer(pI).getPosition()))
+			if (mHPositions.contains(mProblem.getMonomer(pI).getPosition()))
 				return false;
 
 		return true;
@@ -160,26 +160,28 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 	@Override
 	protected void evaluateStructureEnergy() {
 
-		mTempPositions.clear();
+		mHPositions.clear();
 		mLoops.clear();
 
 		for (int i = 0; i < mProblem.getNumOfMonomers(); i++)
 			if (mProblem.getMonomer(i).getType() == MonomerType.H)
-				mTempPositions.add(mProblem.getMonomer(i).getPosition());
+				mHPositions.add(mProblem.getMonomer(i).getPosition());
 
-		for (int i = 0; i < mTempPositions.size(); i++) {
+		for (int i = 0; i < mHPositions.size(); i++) {
 
-			Vector2d x = mTempPositions.get(i);
+			Vector2d x = mHPositions.get(i);
 
-			for (int j = i + 1; j < mTempPositions.size(); j++) {
+			for (int j = i + 1; j < mHPositions.size(); j++) {
 
-				Vector2d y = mTempPositions.get(j);
+				Vector2d y = mHPositions.get(j);
 
 				if (!mProblem.isNeighbors(x, y))
 					mLoops.add(new Pair(mProblem.getMonomerFromVector2d(x),
 							mProblem.getMonomerFromVector2d(y)));
 			}
 		}
+		
+		//TODO: use the map inorder to get in in O(N)
 
 		mProblem.setEnergy(-mLoops.size());
 	}
@@ -217,6 +219,8 @@ public class MyTomaAlgorithm extends TomaAlgorithm {
 				mProblem.getMonomer(i).decreaseMobility(
 						mProblem.getCoolingValue(length));
 		}
+		
+		//TODO: my project is improving F..
 	}
 
 	@Override
