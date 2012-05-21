@@ -46,8 +46,11 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	@Override
 	protected int selectResidueRandomly() {
-		return (int) (mProtein.getRandom().nextDouble() * (mProtein
-				.getNumOfMonomers() - 1));
+//		return (int) (mProtein.getRandom().nextDouble() * (mProtein
+//				.getNumOfMonomers() - 1));
+		
+		return ((int)(mProtein.getRandom().nextDouble() * 1000)) % mProtein
+				.getNumOfMonomers();
 	}
 
 	@Override
@@ -101,10 +104,10 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		mTempPositions.clear();
 
 		for (int i = 0; i <= pI; i++)
-			mTempPositions.add(mProtein.getMonomer(pI).getPosition());
+			mTempPositions.add(mProtein.getMonomer(i).getPosition());
 
 		for (int i = pI + 1; i < mProtein.getNumOfMonomers(); i++)
-			if (mTempPositions.contains(mProtein.getMonomer(pI).getPosition()))
+			if (mTempPositions.contains(mProtein.getMonomer(i).getPosition()))
 				return false;
 
 		return true;
