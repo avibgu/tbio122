@@ -29,7 +29,7 @@ public class Monomer {
 	}
 	
 	public String getResults() {
-		return (int)mPosition.getX() + "," + (int)mPosition.getY();
+		return (int)mPosition.getX() + "," + (int)mPosition.getY() + "," + getType();
 	}
 	
 	@Override

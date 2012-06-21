@@ -72,7 +72,7 @@ public class Protein extends Problem {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("Energy: " + getEnergy() + "\n");
-		sb.append("X,Y\n");
+		sb.append("X,Y,Type\n");
 		
 		for (Monomer monomer : mMonomers)
 			sb.append(monomer.getResults() + "\n");
