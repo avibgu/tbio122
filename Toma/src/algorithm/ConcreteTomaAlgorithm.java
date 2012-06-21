@@ -3,22 +3,21 @@ package algorithm;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Vector2d;
-
 import problem.Direction;
 import problem.Monomer;
 import problem.MonomerType;
 import problem.Pair;
 import problem.Protein;
+import utilities.HashedVector2d;
 
 public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	private Direction mOldDirectionOfI;
-	private List<Vector2d> mTempPositions;
-	private Vector2d mTempVector;
-	private List<Vector2d> mPotencialsNeighbors;
+	private List<HashedVector2d> mTempPositions;
+	private HashedVector2d mTempVector;
+	private List<HashedVector2d> mPotencialsNeighbors;
 	private List<Pair> mLoops;
-	
+
 	public ConcreteTomaAlgorithm() {
 		super();
 		initDataStructures();
@@ -30,27 +29,27 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	}
 
 	private void initDataStructures() {
-		
-		mTempPositions = new ArrayList<Vector2d>(mProtein.getNumOfMonomers());
-		mTempVector = new Vector2d();
-		
-		mPotencialsNeighbors = new ArrayList<Vector2d>(4);
-		
-		mPotencialsNeighbors.add(0, new Vector2d());
-		mPotencialsNeighbors.add(1, new Vector2d());
-		mPotencialsNeighbors.add(2, new Vector2d());
-		mPotencialsNeighbors.add(3, new Vector2d());
-		
+
+		mTempPositions = new ArrayList<HashedVector2d>(mProtein.getNumOfMonomers());
+		mTempVector = new HashedVector2d();
+
+		mPotencialsNeighbors = new ArrayList<HashedVector2d>(4);
+
+		mPotencialsNeighbors.add(0, new HashedVector2d());
+		mPotencialsNeighbors.add(1, new HashedVector2d());
+		mPotencialsNeighbors.add(2, new HashedVector2d());
+		mPotencialsNeighbors.add(3, new HashedVector2d());
+
 		mLoops = new ArrayList<Pair>();
 	}
 
 	@Override
 	protected int selectResidueRandomly() {
-//		return (int) (mProtein.getRandom().nextDouble() * (mProtein
-//				.getNumOfMonomers() - 1));
-		
-		return ((int)(mProtein.getRandom().nextDouble() * 1000)) % mProtein
-				.getNumOfMonomers();
+		// return (int) (mProtein.getRandom().nextDouble() * (mProtein
+		// .getNumOfMonomers() - 1));
+
+		return ((int) (mProtein.getRandom().nextDouble() * 1000))
+				% mProtein.getNumOfMonomers();
 	}
 
 	@Override
@@ -60,6 +59,9 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 		// the criterion is always satisfied for residues not belonging to loop
 		// defined by HH contacts
+
+		if (0 == pI || mProtein.getNumOfMonomers() - 1 == pI)
+			return false;
 
 		double rnd = mProtein.getRandom().nextDouble();
 
@@ -115,47 +117,54 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	private void calcPositionsStartingFromThisMonomer(int pMonomerIndex) {
 
-		if (2 > pMonomerIndex)
-			pMonomerIndex = 2;
+		if (0 == pMonomerIndex)
+			pMonomerIndex = 1;
 
-		Vector2d pointIminusOne = mProtein.getMonomers().get(pMonomerIndex - 1)
-				.getPosition();
-		Vector2d pointIminusTwo = mProtein.getMonomers().get(pMonomerIndex - 2)
+		HashedVector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
 				.getPosition();
 
-		mTempVector.sub(pointIminusOne, pointIminusTwo);
+		HashedVector2d pointIminusOne = mProtein.getMonomers().get(pMonomerIndex - 1)
+				.getPosition();
+
+		mTempVector.sub(pointI, pointIminusOne);
 
 		calcPositionsStartingFromThisMonomerRecursivly(pMonomerIndex,
 				pointIminusOne, mTempVector);
 	}
 
-	private void calcPositionsStartingFromThisMonomerRecursivly(int pI,
-			Vector2d pPointIminusOne, Vector2d pDirectionsVector) {
+	private void calcPositionsStartingFromThisMonomerRecursivly(
+			int pMonomerIndex, HashedVector2d pPointIminusOne,
+			HashedVector2d pDirectionsVector) {
 
-		if (mProtein.getNumOfMonomers() - 1 == pI)
+		if (mProtein.getNumOfMonomers() - 1 == pMonomerIndex)
 			return;
 
-		Vector2d pointI = mProtein.getMonomers().get(pI).getPosition();
+		HashedVector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
+				.getPosition();
 
-		Direction directionOfI = mProtein.getMonomers().get(pI).getDirection();
+		Direction directionOfI = mProtein.getMonomers().get(pMonomerIndex)
+				.getDirection();
 
 		if (Direction.LEFT == directionOfI)
 			turnDirectionVectorLeft(pDirectionsVector);
 
-		else if (Direction.LEFT == directionOfI)
+		else if (Direction.RIGHT == directionOfI)
 			turnDirectionVectorRight(pDirectionsVector);
 
-		mProtein.getMonomers()
-				.get(pI + 1)
-				.getPosition()
-				.set(pointI.getX() + mTempVector.getX(),
-						pointI.getY() + mTempVector.getY());
+		// mProtein.getMonomers()
+		// .get(pMonomerIndex + 1)
+		// .getPosition()
+		// .set(pointI.getX() + mTempVector.getX(),
+		// pointI.getY() + mTempVector.getY());
+		//
+		mProtein.setMonomerPosition(pMonomerIndex + 1, pointI.getX()
+				+ mTempVector.getX(), pointI.getY() + mTempVector.getY());
 
-		calcPositionsStartingFromThisMonomerRecursivly(pI + 1, pointI,
-				pDirectionsVector);
+		calcPositionsStartingFromThisMonomerRecursivly(pMonomerIndex + 1,
+				pointI, pDirectionsVector);
 	}
 
-	private void turnDirectionVectorLeft(Vector2d pDirectionsVector) {
+	private void turnDirectionVectorLeft(HashedVector2d pDirectionsVector) {
 
 		double x = pDirectionsVector.getX();
 		double y = pDirectionsVector.getY();
@@ -163,7 +172,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		pDirectionsVector.set(-y, x);
 	}
 
-	private void turnDirectionVectorRight(Vector2d pDirectionsVector) {
+	private void turnDirectionVectorRight(HashedVector2d pDirectionsVector) {
 
 		double x = pDirectionsVector.getX();
 		double y = pDirectionsVector.getY();
@@ -185,7 +194,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 			calcPotencialsNeighbors(monomer.getPosition());
 
-			for (Vector2d pn : mPotencialsNeighbors) {
+			for (HashedVector2d pn : mPotencialsNeighbors) {
 
 				Monomer neighborMonomer = mProtein.getMonomerFromVector2d(pn);
 
@@ -205,7 +214,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		mProtein.setEnergy(-mLoops.size());
 	}
 
-	private void calcPotencialsNeighbors(Vector2d pPosition) {
+	private void calcPotencialsNeighbors(HashedVector2d pPosition) {
 
 		mPotencialsNeighbors.get(0).set(pPosition.getX() + 1, pPosition.getY());
 		mPotencialsNeighbors.get(1).set(pPosition.getX() - 1, pPosition.getY());
@@ -241,11 +250,11 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		}
 
 		// TODO: my project is to improve updateF from O(N^2) to O(N)
-		
+
 		/*
 		 * Calc Energy Fills these structures (of size N):
 		 * 
-		 * loopStart[[k11,k12,k13],[k21,k22,k23],...] 
+		 * loopStart[[k11,k12,k13],[k21,k22,k23],...]
 		 * loopEnd[[[d11,d22,d23],[d21,d22,d23],...]
 		 * 
 		 * We iterate the protein, monomer by monomer, and reducing f(i) by X,

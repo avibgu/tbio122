@@ -1,12 +1,9 @@
 package algorithm;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import problem.Direction;
 import problem.Protein;
 
 public class ConcreteTomaAlgorithmTest {

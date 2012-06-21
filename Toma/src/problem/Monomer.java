@@ -1,16 +1,16 @@
 package problem;
 
-import javax.vecmath.Vector2d;
+import utilities.HashedVector2d;
 
 public class Monomer {
 
 	private MonomerType mType;
-	private Vector2d	mPosition;
+	private HashedVector2d	mPosition;
 	private Direction	mDirection;	// Theta
 	private double		mMobility;	// F
 	private int			mIndex;
 
-	public Monomer(char pType, Vector2d pPosition, int pIndex) {
+	public Monomer(char pType, HashedVector2d pPosition, int pIndex) {
 
 		if ('h' == pType || 'H' == pType) 
 			mType = MonomerType.H;
@@ -41,11 +41,11 @@ public class Monomer {
 		mType = pType;
 	}
 
-	public Vector2d getPosition() {
+	public HashedVector2d getPosition() {
 		return mPosition;
 	}
 
-	public void setPosition(Vector2d pPosition) {
+	public void setPosition(HashedVector2d pPosition) {
 		mPosition = pPosition;
 	}
 
