@@ -5,38 +5,40 @@ import utilities.HashedVector2d;
 public class Monomer {
 
 	private MonomerType mType;
-	private HashedVector2d	mPosition;
-	private Direction	mDirection;	// Theta
-	private double		mMobility;	// F
-	private int			mIndex;
+	private HashedVector2d mPosition;
+	private Direction mDirection; // Theta
+	private double mMobility; // F
+	private int mIndex;
 
 	public Monomer(char pType, HashedVector2d pPosition, int pIndex) {
 
-		if ('h' == pType || 'H' == pType) 
+		if ('h' == pType || 'H' == pType)
 			mType = MonomerType.H;
-		
+
 		else
 			mType = MonomerType.P;
-		
+
 		mPosition = pPosition;
 		mDirection = Direction.AHEAD;
 		mMobility = 0;
 		mIndex = pIndex;
 	}
-	
+
 	public void decreaseMobility(double pCoolingValue) {
 		mMobility -= pCoolingValue;
 	}
-	
+
 	public String getResults() {
-		return (int)mPosition.getX() + "," + (int)mPosition.getY() + "," + getType();
+		return (int) mPosition.getX() + "," + (int) mPosition.getY() + ","
+				+ getType();
 	}
-	
+
 	@Override
 	public String toString() {
-		return "(" + (int)mPosition.getX() + "," + (int)mPosition.getY() + ")";
+		return "(" + (int) mPosition.getX() + "," + (int) mPosition.getY()
+				+ ")";
 	}
-	
+
 	public MonomerType getType() {
 		return mType;
 	}
@@ -75,5 +77,5 @@ public class Monomer {
 
 	public void setIndex(int pIndex) {
 		mIndex = pIndex;
-	}	
+	}
 }

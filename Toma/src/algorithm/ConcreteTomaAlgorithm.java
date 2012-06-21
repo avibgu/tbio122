@@ -30,7 +30,8 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	private void initDataStructures() {
 
-		mTempPositions = new ArrayList<HashedVector2d>(mProtein.getNumOfMonomers());
+		mTempPositions = new ArrayList<HashedVector2d>(
+				mProtein.getNumOfMonomers());
 		mTempVector = new HashedVector2d();
 
 		mPotencialsNeighbors = new ArrayList<HashedVector2d>(4);
@@ -45,8 +46,6 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	@Override
 	protected int selectResidueRandomly() {
-		// return (int) (mProtein.getRandom().nextDouble() * (mProtein
-		// .getNumOfMonomers() - 1));
 
 		return ((int) (mProtein.getRandom().nextDouble() * 1000))
 				% mProtein.getNumOfMonomers();
@@ -76,9 +75,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		// choose Theta(i), while taking as invariant all other Theta
 		// coordinates (this corresponds to a pivot move)
 
-		// is this ok?.. or should we choosee only 1 or -1?..
-
-		int rnd = ((int)(mProtein.getRandom().nextDouble() * 1000)) % 3;
+		int rnd = ((int) (mProtein.getRandom().nextDouble() * 1000)) % 3;
 
 		Direction newThetaI = Direction.AHEAD;
 
@@ -123,8 +120,8 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		HashedVector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
 				.getPosition();
 
-		HashedVector2d pointIminusOne = mProtein.getMonomers().get(pMonomerIndex - 1)
-				.getPosition();
+		HashedVector2d pointIminusOne = mProtein.getMonomers()
+				.get(pMonomerIndex - 1).getPosition();
 
 		mTempVector.sub(pointI, pointIminusOne);
 
@@ -151,12 +148,6 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		else if (Direction.RIGHT == directionOfI)
 			turnDirectionVectorRight(pDirectionsVector);
 
-		// mProtein.getMonomers()
-		// .get(pMonomerIndex + 1)
-		// .getPosition()
-		// .set(pointI.getX() + mTempVector.getX(),
-		// pointI.getY() + mTempVector.getY());
-		//
 		mProtein.setMonomerPosition(pMonomerIndex + 1, pointI.getX()
 				+ mTempVector.getX(), pointI.getY() + mTempVector.getY());
 
@@ -226,8 +217,6 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	protected void decreaseTemperature() {
 		// should be performed due to some cooling strategy
 		mProtein.setTemperature(mProtein.getTemperature() * 0.999999);
-
-		// improvement: mProblem.setCk((0.3 * nH) / (0.5 * (nH + nP)));
 	}
 
 	@Override
