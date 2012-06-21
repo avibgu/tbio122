@@ -28,7 +28,6 @@ public class Protein extends Problem {
 		initMonomers(pSequense);
 	}
 	
-	
 	private void initMonomers(String pSequense) {
 	
 		mMonomers = new ArrayList<Monomer>(getNumOfMonomers());
@@ -50,6 +49,34 @@ public class Protein extends Problem {
 	public double getCoolingValue(int pK) {
 		// improvement: return 20 / (pK + 17);
 		return(1);
+	}
+	
+	public void setMonomerPosition(int pMonomerIndex, double pNewX, double pNewY) {
+		
+		Monomer monomer = getMonomers().get(pMonomerIndex);
+		
+		HashedVector2d position = monomer.getPosition();
+		
+		mVector2dToMonomer.remove(position);
+		
+		position.set(pNewX, pNewY);
+		
+		mVector2dToMonomer.put(position, monomer);		
+	}
+
+	public String getResults() {
+
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Energy: " + getEnergy() + "\n");
+		sb.append("X,Y\n");
+		
+		for (Monomer monomer : mMonomers)
+			sb.append(monomer.getResults() + "\n");
+		
+		sb.append("\n");
+		
+		return sb.toString();
 	}
 	
 	@Override
@@ -113,19 +140,5 @@ public class Protein extends Problem {
 	
 	public Monomer getMonomerFromVector2d(HashedVector2d pVector2d) {
 		return mVector2dToMonomer.get(pVector2d);
-	}
-
-	//TODO
-	public void setMonomerPosition(int pMonomerIndex, double pNewX, double pNewY) {
-		
-		Monomer monomer = getMonomers().get(pMonomerIndex);
-		
-		HashedVector2d position = monomer.getPosition();
-		
-		mVector2dToMonomer.remove(position);
-		
-		position.set(pNewX, pNewY);
-		
-		mVector2dToMonomer.put(position, monomer);		
 	}
 }

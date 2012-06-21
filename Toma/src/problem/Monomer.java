@@ -28,6 +28,10 @@ public class Monomer {
 		mMobility -= pCoolingValue;
 	}
 	
+	public String getResults() {
+		return (int)mPosition.getX() + "," + (int)mPosition.getY();
+	}
+	
 	@Override
 	public String toString() {
 		return "(" + (int)mPosition.getX() + "," + (int)mPosition.getY() + ")";

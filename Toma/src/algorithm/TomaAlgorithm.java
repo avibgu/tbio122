@@ -42,6 +42,8 @@ public abstract class TomaAlgorithm implements Runnable {
 
 		// i Assume that the initial state is extended structure
 
+		int minEnergy = 0;
+		
 		while (numOfRuns-- > 0) {
 
 			int i = selectResidueRandomly();
@@ -53,13 +55,16 @@ public abstract class TomaAlgorithm implements Runnable {
 				if (isTheStructureValid(i)) {
 
 					evaluateStructureEnergy();
+					
+					// TODO - debug
+					if (mProtein.getEnergy() < minEnergy){
+						minEnergy = mProtein.getEnergy();
+						System.out.println(minEnergy);
+					}
+					
 					countThisMove();
 					decreaseTemperature();
 					updateF();
-
-					// TODO: just for debug..
-					System.out.println(numOfRuns + ": " + mProtein);
-
 				}
 
 				else
