@@ -66,6 +66,9 @@ public abstract class TomaAlgorithm implements Runnable {
 					countThisMove();
 					decreaseTemperature();
 					updateF();
+					
+					if(numOfRuns%1000000 == 0)
+						System.out.println(numOfRuns);
 				}
 
 				else
