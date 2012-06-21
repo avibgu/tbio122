@@ -78,14 +78,14 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 		// is this ok?.. or should we choosee only 1 or -1?..
 
-		double rnd = mProtein.getRandom().nextDouble();
+		int rnd = ((int)(mProtein.getRandom().nextDouble() * 1000)) % 3;
 
 		Direction newThetaI = Direction.AHEAD;
 
-		if (rnd <= 0.3)
+		if (1 == rnd)
 			newThetaI = Direction.LEFT;
 
-		else if (rnd >= 0.6)
+		else if (2 == rnd)
 			newThetaI = Direction.RIGHT;
 
 		mOldDirectionOfI = mProtein.getMonomer(pI).getDirection();

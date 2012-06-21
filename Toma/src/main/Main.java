@@ -54,7 +54,7 @@ public class Main {
 
 		for (Protein problem : problems) {
 
-			System.out.println("FINISH\n" + problem);
+			System.out.println("FINISH\n" + problem.getResults());
 			
 			FileManipulator.writeResultsToFile(problem.getResults(), "problem"
 					+ i++ + ".csv");

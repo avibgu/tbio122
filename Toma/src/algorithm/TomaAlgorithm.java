@@ -59,6 +59,7 @@ public abstract class TomaAlgorithm implements Runnable {
 					// TODO - debug
 					if (mProtein.getEnergy() < minEnergy){
 						minEnergy = mProtein.getEnergy();
+						mProtein.saveResults();
 						System.out.println(minEnergy);
 					}
 					

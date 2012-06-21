@@ -18,6 +18,8 @@ public class Protein extends Problem {
 	private List<Monomer>			mMonomers;
 	private Map<HashedVector2d,Monomer>	mVector2dToMonomer;
 	
+	private String mResults;
+	
 	public Protein(String pSequense) {
 
 		super();
@@ -64,8 +66,9 @@ public class Protein extends Problem {
 		mVector2dToMonomer.put(position, monomer);		
 	}
 
-	public String getResults() {
 
+	public void saveResults() {
+		 
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("Energy: " + getEnergy() + "\n");
@@ -76,7 +79,7 @@ public class Protein extends Problem {
 		
 		sb.append("\n");
 		
-		return sb.toString();
+		setResults(sb.toString());
 	}
 	
 	@Override
@@ -140,5 +143,13 @@ public class Protein extends Problem {
 	
 	public Monomer getMonomerFromVector2d(HashedVector2d pVector2d) {
 		return mVector2dToMonomer.get(pVector2d);
+	}
+	
+	public String getResults() {
+		return mResults;
+	}
+
+	public void setResults(String pResults) {
+		mResults = pResults;
 	}
 }
