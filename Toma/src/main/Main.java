@@ -13,6 +13,7 @@ import algorithm.ConcreteTomaAlgorithm;
 
 import problem.Protein;
 import utilities.FileManipulator;
+import utilities.ProteinGraph;
 
 public class Main {
 
@@ -40,6 +41,7 @@ public class Main {
 		executor.awaitTermination(1, TimeUnit.DAYS);
 
 		produceRusultsAsCSV(problems);
+		produceRusultsAsGraph(problems);
 	}
 
 	protected static void produceRusultsAsCSV(Set<Protein> problems) {
@@ -49,43 +51,15 @@ public class Main {
 		for (Protein problem : problems) {
 
 			System.out.println("FINISH\n" + problem.getResults());
-			
+
 			FileManipulator.writeResultsToFile(problem.getResults(), "problem"
 					+ i++ + ".csv");
 		}
 	}
 
 	protected static void produceRusultsAsGraph(Set<Protein> problems) {
-//
-//		mxGraph mxGraph = new mxGraph();
-//		
-//		mxGraphComponent graph = new mxGraphComponent(mxGraph);
-//
-//		graph.setPreferredSize(new Dimension( 530, 320 ));
-//		
-//		JFrame frame = new JFrame();
-//		
-//		frame.getContentPane().add(graph);
-//		
-//		mxGraph.getModel().beginUpdate();
-//
-//		try {
-//
-//			Object v1 = mxGraph.createVertex(null, null, "Hello,", 20, 20, 80,
-//					30, null);
-//			
-//			Object v2 = mxGraph.createVertex(null, null, "World!", 200, 150, 80,
-//					30, null);
-//			
-//			Object e1 = mxGraph.addEdge(null, null, v1, v2, 0);
-//		}
-//
-//		finally {
-//
-//			mxGraph.getModel().endUpdate();
-//		}
-//		
-//		frame.setVisible(true);
+		for (Protein problem : problems)
+			ProteinGraph.show(problem);
 	}
 
 	private static void initPropertiesFromFile(String pPropertiesFileLocation)

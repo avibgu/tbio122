@@ -46,6 +46,10 @@ public abstract class TomaAlgorithm implements Runnable {
 		
 		while (numOfRuns-- > 0) {
 
+			//TODO: Debug..
+			if(numOfRuns%1000000 == 0)
+				System.out.println(10000000 - numOfRuns);
+			
 			int i = selectResidueRandomly();
 
 			if (shouldWeMoveIt(i)) {
@@ -56,19 +60,16 @@ public abstract class TomaAlgorithm implements Runnable {
 
 					evaluateStructureEnergy();
 					
-					// TODO - debug
+					// TODO: Debug..
 					if (mProtein.getEnergy() < minEnergy){
 						minEnergy = mProtein.getEnergy();
 						mProtein.saveResults();
-						System.out.println(minEnergy);
+						System.out.println(minEnergy + " -> " + numOfRuns);
 					}
 					
 					countThisMove();
 					decreaseTemperature();
 					updateF();
-					
-					if(numOfRuns%1000000 == 0)
-						System.out.println(numOfRuns);
 				}
 
 				else

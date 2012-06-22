@@ -5,6 +5,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="vecmath-1.5.2.jar"/>
-	<classpathentry kind="lib" path="jgraphx.jar"/>
+	<classpathentry kind="lib" path="/jgrapht/lib/jgraph.jar"/>
+	<classpathentry kind="lib" path="/jgrapht/lib/TGGraphLayout.jar"/>
+	<classpathentry kind="lib" path="/jgrapht/jgrapht-jdk1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
