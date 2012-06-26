@@ -6,7 +6,6 @@ import java.util.List;
 import problem.Direction;
 import problem.Monomer;
 import problem.MonomerType;
-import problem.Pair;
 import problem.Protein;
 import utilities.HashedVector2d;
 
@@ -16,7 +15,8 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	private List<HashedVector2d> mTempPositions;
 	private HashedVector2d mTempVector;
 	private List<HashedVector2d> mPotencialsNeighbors;
-	private List<Pair> mLoops;
+	// private List<Pair> mLoops;
+	private LoopsManager mLoopsManager;
 
 	public ConcreteTomaAlgorithm() {
 		super();
@@ -41,7 +41,9 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		mPotencialsNeighbors.add(2, new HashedVector2d());
 		mPotencialsNeighbors.add(3, new HashedVector2d());
 
-		mLoops = new ArrayList<Pair>();
+		// mLoops = new ArrayList<Pair>();
+
+		mLoopsManager = new LoopsManager(mProtein, mProtein.getNumOfMonomers());
 	}
 
 	@Override
@@ -174,7 +176,11 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	@Override
 	protected void evaluateStructureEnergy() {
 
-		mLoops.clear();
+		// mLoops.clear();
+
+		mLoopsManager.clear();
+
+		int energy = 0;
 
 		for (int i = 0; i < mProtein.getNumOfMonomers(); i++) {
 
@@ -193,16 +199,22 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 				// connected directly to me
 				if (null != neighborMonomer
 						&& neighborMonomer.getIndex() > (i + 1)
-						&& neighborMonomer.getType() == MonomerType.H)
+						&& neighborMonomer.getType() == MonomerType.H) {
 
-					// TODO: improve this data-structure.. !!!
+					// improve this data-structure.. !!!
 					// every Monomer can start or end up to 3 loops
 					// (don't use new!!..)
-					mLoops.add(new Pair(monomer, neighborMonomer));
+					// mLoops.add(new Pair(monomer, neighborMonomer));
+
+					// improvement
+					mLoopsManager.markLoop(i, neighborMonomer.getIndex());
+
+					energy--;
+				}
 			}
 		}
 
-		mProtein.setEnergy(-mLoops.size());
+		mProtein.setEnergy(energy);
 	}
 
 	private void calcPotencialsNeighbors(HashedVector2d pPosition) {
@@ -224,21 +236,40 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		// do this for all the residues that participates in loops
 		// we should avoid double-counting
 
-		int length;
+		int coolingValue = 0;
 
-		for (Pair loop : mLoops) {
+		for (int i = 0; i < mProtein.getNumOfMonomers(); i++) {
 
-			int from = loop.getFirst().getIndex();
-			int to = loop.getSecond().getIndex();
+			coolingValue += mLoopsManager.getLoopsStarts().get(i)
+					.getCoolingValue();
 
-			length = to - from;
+			mProtein.getMonomer(i).decreaseMobility(coolingValue);
 
-			for (int i = from; i <= to; i++)
-				mProtein.getMonomer(i).decreaseMobility(
-						mProtein.getCoolingValue(length));
+			coolingValue -= mLoopsManager.getLoopsEnds().get(i)
+					.getCoolingValue();
 		}
+	}
 
-		// TODO: my project is to improve updateF from O(N^2) to O(N)
+	@Deprecated
+	protected void oldUpdateF() {
+		// do this for all the residues that participates in loops
+		// we should avoid double-counting
+
+		// int length;
+		//
+		// for (Pair loop : mLoops) {
+		//
+		// int from = loop.getFirst().getIndex();
+		// int to = loop.getSecond().getIndex();
+		//
+		// length = to - from;
+		//
+		// for (int i = from; i <= to; i++)
+		// mProtein.getMonomer(i).decreaseMobility(
+		// mProtein.getCoolingValue(length));
+		// }
+
+		// my project is to improve updateF from O(N^2) to O(N)
 
 		/*
 		 * Calc Energy Fills these structures (of size N):
@@ -247,7 +278,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		 * loopEnd[[[d11,d22,d23],[d21,d22,d23],...]
 		 * 
 		 * We iterate the protein, monomer by monomer, and reducing f(i) by X,
-		 * When X = Sum(dij) - Sum(dij) that we saw until i (included?..)
+		 * When X = Sum(kij) - Sum(dij) that we saw until i (included?..)
 		 */
 	}
 

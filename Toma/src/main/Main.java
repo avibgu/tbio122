@@ -59,7 +59,7 @@ public class Main {
 
 	protected static void produceRusultsAsGraph(Set<Protein> problems) {
 		for (Protein problem : problems)
-			ProteinGraph.show(problem);
+			ProteinGraph.show(problem.getResults());
 	}
 
 	private static void initPropertiesFromFile(String pPropertiesFileLocation)
@@ -68,8 +68,7 @@ public class Main {
 		prop.load(new FileInputStream(new File(pPropertiesFileLocation)));
 
 		if (null == prop.getProperty("SEED")
-				|| null == prop.getProperty("NUM_OF_RUNS")
-				|| null == prop.getProperty("CK")) {
+				|| null == prop.getProperty("NUM_OF_RUNS")) {
 
 			throw new Exception("Please provide a valid Properties file.");
 		}

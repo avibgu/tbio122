@@ -1,43 +1,3 @@
-/* ==========================================
- * JGraphT : a free Java graph-theory library
- * ==========================================
- *
- * Project Info:  http://jgrapht.sourceforge.net/
- * Project Creator:  Barak Naveh (http://sourceforge.net/users/barak_naveh)
- *
- * (C) Copyright 2003-2008, by Barak Naveh and Contributors.
- *
- * This library is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
- * License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library; if not, write to the Free Software Foundation,
- * Inc.,
- * 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
- */
-/* ----------------------
- * JGraphAdapterDemo.java
- * ----------------------
- * (C) Copyright 2003-2008, by Barak Naveh and Contributors.
- *
- * Original Author:  Barak Naveh
- * Contributor(s):   -
- *
- * $Id: JGraphAdapterDemo.java 725 2010-11-26 01:24:28Z perfecthash $
- *
- * Changes
- * -------
- * 03-Aug-2003 : Initial revision (BN);
- * 07-Nov-2003 : Adaptation to JGraph 3.0 (BN);
- *
- */
 package utilities;
 
 import java.awt.*;
@@ -52,52 +12,36 @@ import org.jgrapht.*;
 import org.jgrapht.ext.*;
 import org.jgrapht.graph.*;
 
-// resolve ambiguity
 import org.jgrapht.graph.DefaultEdge;
 
-import problem.Monomer;
-import problem.MonomerType;
-import problem.Protein;
-
-/**
- * A demo applet that shows how to use JGraph to visualize JGraphT graphs.
- * 
- * @author Barak Naveh
- * @since Aug 3, 2003
- */
 public class ProteinGraph extends JApplet {
-	// ~ Static fields/initializers
-	// ---------------------------------------------
 
 	private static final long serialVersionUID = 3256444702936019250L;
-	
+
 	private static final Color DEFAULT_BG_COLOR = Color.WHITE;
+
 	private static final Color H_COLOR = Color.BLUE;
 	private static final Color P_COLOR = Color.RED;
+
+	private static final int SCALE_FACTOR = 50;
+	private static final int BOUNDRY = 25;
 	
-	private static final Dimension DEFAULT_SIZE = new Dimension(800, 600);
+	private static final Dimension DEFAULT_SIZE = new Dimension(1200,600);
 
-	// ~ Instance fields
-	// --------------------------------------------------------
+	private static final double MONOMER_HEIGHT = 15;
+	private static final double MONOMER_WIDTH = 15;
 
-	//
+
 	private JGraphModelAdapter<String, DefaultEdge> jgAdapter;
 
-	// ~ Methods
-	// ----------------------------------------------------------------
-
-	/**
-	 * An alternative starting point for this demo, to also allow running this
-	 * applet as an application.
-	 * 
-	 * @param args
-	 *            ignored.
-	 */
-	public static void show(Protein pProtein) {
+	public static void show(String pResult) {
+		
 		ProteinGraph applet = new ProteinGraph();
-		applet.init(pProtein);
+		
+		applet.init(pResult);
 
 		JFrame frame = new JFrame();
+		
 		frame.getContentPane().add(applet);
 		frame.setTitle("JGraphT Adapter to JGraph Demo");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -105,10 +49,10 @@ public class ProteinGraph extends JApplet {
 		frame.setVisible(true);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void init(Protein pProtein) {
+	public void init(String pResult) {
+
+		String[] stringMonomers = pResult.split("\n");
+		
 		// create a JGraphT graph
 		ListenableGraph<String, DefaultEdge> g = new ListenableDirectedMultigraph<String, DefaultEdge>(
 				DefaultEdge.class);
@@ -119,24 +63,51 @@ public class ProteinGraph extends JApplet {
 		JGraph jgraph = new JGraph(jgAdapter);
 
 		adjustDisplaySettings(jgraph);
+
 		getContentPane().add(jgraph);
+
 		resize(DEFAULT_SIZE);
 
-		for (int i = 0; i < pProtein.getMonomers().size(); i++) {
+		int minX = Integer.MAX_VALUE;
+		int minY = Integer.MAX_VALUE;
+		
+		for (int i = 3; i < stringMonomers.length; i++){
+			
+			String[] monomer = stringMonomers[i].split(",");
+			
+			int x = Integer.parseInt(monomer[0]);
+			int y = Integer.parseInt(monomer[1]);
+			
+			if (x < minX)
+				minX = x;
+			
+			if (y < minY)
+				minY = y;
+		}
+		
+		String prevCell = "";
 
-			Monomer monomer = pProtein.getMonomers().get(i);
+		for (int i = 3; i < stringMonomers.length; i++) {
 
-			g.addVertex(String.valueOf(i));
+			String[] monomer = stringMonomers[i].split(",");
 
-			if (0 != i)
-				g.addEdge(String.valueOf(i - 1), String.valueOf(i));
+			String currCell = String.valueOf(i) + monomer[2];
 
-			positionVertexAt(String.valueOf(i), (int) monomer.getPosition()
-					.getX() * 100, (int) monomer.getPosition().getY() * 100);
+			g.addVertex(currCell);
+
+			if (3 != i)
+				removeText(g.addEdge(prevCell, currCell));
+
+			positionVertexAt(currCell, (Integer.parseInt(monomer[0]) - minX)
+					* SCALE_FACTOR + BOUNDRY, (Integer.parseInt(monomer[1]) - minY)
+					* SCALE_FACTOR + BOUNDRY);
+
+			prevCell = currCell;
 		}
 	}
 
 	private void adjustDisplaySettings(JGraph jg) {
+
 		jg.setPreferredSize(DEFAULT_SIZE);
 
 		Color c = DEFAULT_BG_COLOR;
@@ -144,42 +115,61 @@ public class ProteinGraph extends JApplet {
 
 		try {
 			colorStr = getParameter("bgcolor");
-		} catch (Exception e) {
 		}
 
-		if (colorStr != null) {
-			c = Color.decode(colorStr);
+		catch (Exception e) {
 		}
+
+		if (colorStr != null)
+			c = Color.decode(colorStr);
 
 		jg.setBackground(c);
 	}
 
 	@SuppressWarnings("unchecked")
-	// FIXME hb 28-nov-05: See FIXME below
-	private void positionVertexAt(Object vertex, int x, int y) {
-		DefaultGraphCell cell = jgAdapter.getVertexCell(vertex);
+	private void removeText(DefaultEdge pEdge) {
+
+		DefaultGraphCell cell = jgAdapter.getEdgeCell(pEdge);
+		
 		AttributeMap attr = cell.getAttributes();
-		Rectangle2D bounds = GraphConstants.getBounds(attr);
-
-		Rectangle2D newBounds = new Rectangle2D.Double(x, y, bounds.getWidth(),
-				bounds.getHeight());
-
-		GraphConstants.setBounds(attr, newBounds);
-
-		// TODO: Clean up generics once JGraph goes generic
+		
+		GraphConstants.setValue(attr, "");
+		
 		AttributeMap cellAttr = new AttributeMap();
+
 		cellAttr.put(cell, attr);
+
+		jgAdapter.edit(cellAttr, null, null, null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void positionVertexAt(Object vertex, int x, int y) {
+
+		DefaultGraphCell cell = jgAdapter.getVertexCell(vertex);
+
+		AttributeMap attr = cell.getAttributes();
+
+		GraphConstants.setBounds(attr, new Rectangle2D.Double(x, y,
+				MONOMER_WIDTH, MONOMER_HEIGHT));
+
+		if (((String)vertex).contains("H"))
+			GraphConstants.setBackground(attr, H_COLOR);
+		
+		else
+			GraphConstants.setBackground(attr, P_COLOR);
+		
+		GraphConstants.setValue(attr, "");
+		
+		AttributeMap cellAttr = new AttributeMap();
+
+		cellAttr.put(cell, attr);
+
 		jgAdapter.edit(cellAttr, null, null, null);
 	}
 
-	// ~ Inner Classes
-	// ----------------------------------------------------------
-
-	/**
-	 * a listenable directed multigraph that allows loops and parallel edges.
-	 */
 	private static class ListenableDirectedMultigraph<V, E> extends
 			DefaultListenableGraph<V, E> implements DirectedGraph<V, E> {
+
 		private static final long serialVersionUID = 1L;
 
 		ListenableDirectedMultigraph(Class<E> edgeClass) {
@@ -187,5 +177,3 @@ public class ProteinGraph extends JApplet {
 		}
 	}
 }
-
-// End JGraphAdapterDemo.java

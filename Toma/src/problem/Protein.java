@@ -31,6 +31,7 @@ public class Protein extends Problem {
 		// setTemperature(Double.parseDouble(Main.prop.getProperty("CK")));
 		setTemperature((0.3 * getNumOfH())
 				/ (0.5 * (getNumOfH() + getNumOfP())));
+		mResults = "";
 	}
 
 	private void initMonomers(String pSequense) {
@@ -86,13 +87,12 @@ public class Protein extends Problem {
 
 		StringBuilder sb = new StringBuilder();
 
+		sb.append("\n");
 		sb.append("Energy: " + getEnergy() + "\n");
 		sb.append("X,Y,Type\n");
 
 		for (Monomer monomer : mMonomers)
 			sb.append(monomer.getResults() + "\n");
-
-		sb.append("\n");
 
 		setResults(sb.toString());
 	}

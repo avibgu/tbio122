@@ -37,19 +37,20 @@ public abstract class TomaAlgorithm implements Runnable {
 		}
 
 		int numOfRuns = Integer.parseInt(Main.prop.getProperty("NUM_OF_RUNS"));
+		int numOfRunsRemain = numOfRuns;
 
 		mProtein.setStartTime(new Date());
 
 		// i Assume that the initial state is extended structure
 
 		int minEnergy = 0;
-		
-		while (numOfRuns-- > 0) {
 
-			//TODO: Debug..
-			if(numOfRuns%1000000 == 0)
-				System.out.println(10000000 - numOfRuns);
-			
+		while (numOfRunsRemain-- > 0) {
+
+			// TODO: Debug..
+			if (numOfRunsRemain % 1000000 == 0)
+				System.out.println(numOfRuns - numOfRunsRemain);
+
 			int i = selectResidueRandomly();
 
 			if (shouldWeMoveIt(i)) {
@@ -59,14 +60,16 @@ public abstract class TomaAlgorithm implements Runnable {
 				if (isTheStructureValid(i)) {
 
 					evaluateStructureEnergy();
-					
-					// TODO: Debug..
-					if (mProtein.getEnergy() < minEnergy){
+
+					if (mProtein.getEnergy() < minEnergy) {
 						minEnergy = mProtein.getEnergy();
 						mProtein.saveResults();
-						System.out.println(minEnergy + " -> " + numOfRuns);
+						
+						// TODO: Debug..
+						System.out.println(minEnergy + " -> "
+								+ (numOfRuns - numOfRunsRemain));
 					}
-					
+
 					countThisMove();
 					decreaseTemperature();
 					updateF();
