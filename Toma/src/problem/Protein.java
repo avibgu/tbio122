@@ -16,8 +16,6 @@ public class Protein extends Problem {
 	private List<Monomer> mMonomers;
 	private Map<Vector2d, Monomer> mVector2dToMonomer;
 
-	private String mResults;
-
 	private int mNumOfH;
 	private int mNumOfP;
 
