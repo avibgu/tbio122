@@ -1,17 +1,11 @@
 package algorithm;
 
-import problem.Protein;
-
 public class LoopsManager {
-
-	private Protein mProtein;
 
 	private double[] mLoopsStarts;
 	private double[] mLoopsEnds;
 
-	public LoopsManager(Protein pProtein, int pNumOfMonomers) {
-
-		mProtein = pProtein;
+	public LoopsManager(int pNumOfMonomers) {
 
 		mLoopsStarts = new double[pNumOfMonomers];
 		mLoopsEnds = new double[pNumOfMonomers];
@@ -21,7 +15,7 @@ public class LoopsManager {
 
 	public void markLoop(int fromIndex, int toIndex) {
 
-		double coolingValue = mProtein.getCoolingValue(toIndex - fromIndex);
+		double coolingValue = CollingStrategy.getCoolingValue(toIndex - fromIndex);
 
 		// "a loop of length (toIndex - fromIndex) starts from me.."
 		mLoopsStarts[fromIndex] += coolingValue;

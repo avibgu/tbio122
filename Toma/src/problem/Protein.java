@@ -61,16 +61,6 @@ public class Protein extends Problem {
 		}
 	}
 
-	// G function from the paper
-	public double getCoolingValue(int pK) {
-
-		// return(1);
-
-		// improvement:
-
-		return 20 / (pK + 17);
-	}
-
 	public boolean setMonomerPosition(int pMonomerIndex, double pNewX, double pNewY) {
 
 		mTempPosition.set(pNewX, pNewY);

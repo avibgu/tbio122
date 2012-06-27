@@ -41,7 +41,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		mPotencialsNeighbors.add(2, new Vector2d());
 		mPotencialsNeighbors.add(3, new Vector2d());
 
-		mLoopsManager = new LoopsManager(mProtein, mProtein.getNumOfMonomers());
+		mLoopsManager = new LoopsManager(mProtein.getNumOfMonomers());
 
 		mStopIndex = mProtein.getNumOfMonomers();
 
