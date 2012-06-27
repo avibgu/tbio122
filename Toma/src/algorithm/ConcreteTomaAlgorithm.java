@@ -10,7 +10,6 @@ import problem.Monomer;
 import problem.MonomerType;
 import problem.Protein;
 
-
 public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	private Direction mOldDirectionOfI;
@@ -107,8 +106,8 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		Vector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
 				.getPosition();
 
-		Vector2d pointIminusOne = mProtein.getMonomers()
-				.get(pMonomerIndex - 1).getPosition();
+		Vector2d pointIminusOne = mProtein.getMonomers().get(pMonomerIndex - 1)
+				.getPosition();
 
 		mTempVector.sub(pointI, pointIminusOne);
 
@@ -123,7 +122,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		if (mProtein.getNumOfMonomers() - 1 == pMonomerIndex)
 			return true;
 
-		if (mRestoring && pMonomerIndex >= mStopIndex){
+		if (mRestoring && pMonomerIndex >= mStopIndex) {
 
 			mStopIndex = mProtein.getNumOfMonomers();
 			return true;
@@ -141,16 +140,17 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		else if (Direction.RIGHT == directionOfI)
 			turnDirectionVectorRight(pDirectionsVector);
 
-		boolean overlaps = mProtein.setMonomerPosition(pMonomerIndex + 1, pointI.getX()
-				+ mTempVector.getX(), pointI.getY() + mTempVector.getY());
+		boolean overlaps = mProtein.setMonomerPosition(pMonomerIndex + 1,
+				pointI.getX() + mTempVector.getX(), pointI.getY()
+						+ mTempVector.getY());
 
-		if (overlaps){
+		if (overlaps) {
 			mStopIndex = pMonomerIndex;
 			return false;
 		}
 
-		return calcPositionsStartingFromThisMonomerRecursivly(pMonomerIndex + 1,
-				pointI, pDirectionsVector);
+		return calcPositionsStartingFromThisMonomerRecursivly(
+				pMonomerIndex + 1, pointI, pDirectionsVector);
 	}
 
 	private void turnDirectionVectorLeft(Vector2d pDirectionsVector) {
@@ -217,7 +217,8 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	@Override
 	protected void decreaseTemperature() {
 		// should be performed due to some cooling strategy
-		mProtein.setTemperature(mProtein.getTemperature() * 0.999998);
+		mProtein.setTemperature(CoolingStrategy.getNewTemperature(mProtein
+				.getTemperature()));
 	}
 
 	@Override

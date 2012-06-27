@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.vecmath.Vector2d;
 
+import algorithm.CoolingStrategy;
+
 public class Protein extends Problem {
 
 	private int mNumOfMonomers;
@@ -28,9 +30,7 @@ public class Protein extends Problem {
 		setNumOfMonomers(pSequense.length());
 		setEnergy(0);
 		initMonomers(pSequense);
-		// setTemperature(Double.parseDouble(Main.prop.getProperty("CK")));
-		setTemperature((0.3 * getNumOfH())
-				/ (0.5 * (getNumOfH() + getNumOfP())));
+		setTemperature(CoolingStrategy.getInitialTemperature(mNumOfH, mNumOfP));
 		mResults = "";
 		mTempPosition = new Vector2d();
 	}
@@ -61,7 +61,8 @@ public class Protein extends Problem {
 		}
 	}
 
-	public boolean setMonomerPosition(int pMonomerIndex, double pNewX, double pNewY) {
+	public boolean setMonomerPosition(int pMonomerIndex, double pNewX,
+			double pNewY) {
 
 		mTempPosition.set(pNewX, pNewY);
 
