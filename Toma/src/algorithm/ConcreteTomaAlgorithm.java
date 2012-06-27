@@ -14,10 +14,8 @@ import problem.Protein;
 public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	private Direction mOldDirectionOfI;
-	private List<Vector2d> mTempPositions;
 	private Vector2d mTempVector;
 	private List<Vector2d> mPotencialsNeighbors;
-	// private List<Pair> mLoops; TODO?: remove it..
 	private LoopsManager mLoopsManager;
 	private int mStopIndex;
 	private boolean mRestoring;
@@ -34,8 +32,6 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	private void initDataStructures() {
 
-		mTempPositions = new ArrayList<Vector2d>(
-				mProtein.getNumOfMonomers());
 		mTempVector = new Vector2d();
 
 		mPotencialsNeighbors = new ArrayList<Vector2d>(4);
@@ -44,8 +40,6 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		mPotencialsNeighbors.add(1, new Vector2d());
 		mPotencialsNeighbors.add(2, new Vector2d());
 		mPotencialsNeighbors.add(3, new Vector2d());
-
-		// mLoops = new ArrayList<Pair>();
 
 		mLoopsManager = new LoopsManager(mProtein, mProtein.getNumOfMonomers());
 
@@ -95,7 +89,6 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		else if (2 == rnd)
 			newThetaI = Direction.RIGHT;
 
-		// TODO: immutable??..
 		mOldDirectionOfI = mProtein.getMonomer(pI).getDirection();
 
 		mProtein.getMonomer(pI).setDirection(newThetaI);
@@ -103,24 +96,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	@Override
 	protected boolean isTheStructureValid(int pI) {
-		// we can check collisions only between x,y s.t. x from X and y
-		// from Y. X = {monomers before i (include i)}, Y = {monomers after i}
-
-		// improvement: we can calc the Rectangles of those two Sets, and only
-		// when they collide we will perform the big check
-
 		return calcPositionsStartingFromThisMonomer(pI);
-//
-//		mTempPositions.clear();
-//
-//		for (int i = 0; i <= pI; i++)
-//			mTempPositions.add(mProtein.getMonomer(i).getPosition());
-//
-//		for (int i = pI + 1; i < mProtein.getNumOfMonomers(); i++)
-//			if (mTempPositions.contains(mProtein.getMonomer(i).getPosition()))
-//				return false;
-//
-//		return true;
 	}
 
 	private boolean calcPositionsStartingFromThisMonomer(int pMonomerIndex) {
@@ -196,8 +172,6 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	@Override
 	protected void evaluateStructureEnergy() {
 
-		// mLoops.clear();
-
 		mLoopsManager.clear();
 
 		int energy = 0;
@@ -221,12 +195,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 						&& neighborMonomer.getIndex() > (i + 1)
 						&& neighborMonomer.getType() == MonomerType.H) {
 
-					// improve this data-structure.. !!!
 					// every Monomer can start or end up to 3 loops
-					// (don't use new!!..)
-					// mLoops.add(new Pair(monomer, neighborMonomer));
-
-					// improvement
 					mLoopsManager.markLoop(i, neighborMonomer.getIndex());
 
 					energy--;
@@ -270,38 +239,6 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		}
 	}
 
-	@Deprecated
-	protected void oldUpdateF() {
-		// do this for all the residues that participates in loops
-		// we should avoid double-counting
-
-		// int length;
-		//
-		// for (Pair loop : mLoops) {
-		//
-		// int from = loop.getFirst().getIndex();
-		// int to = loop.getSecond().getIndex();
-		//
-		// length = to - from;
-		//
-		// for (int i = from; i <= to; i++)
-		// mProtein.getMonomer(i).decreaseMobility(
-		// mProtein.getCoolingValue(length));
-		// }
-
-		// my project is to improve updateF from O(N^2) to O(N)
-
-		/*
-		 * Calc Energy Fills these structures (of size N):
-		 *
-		 * loopStart[[k11,k12,k13],[k21,k22,k23],...]
-		 * loopEnd[[[d11,d22,d23],[d21,d22,d23],...]
-		 *
-		 * We iterate the protein, monomer by monomer, and reducing f(i) by X,
-		 * When X = Sum(kij) - Sum(dij) that we saw until i (included?..)
-		 */
-	}
-
 	@Override
 	protected void restoreStructure(int pI) {
 
@@ -311,6 +248,5 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		calcPositionsStartingFromThisMonomer(pI);
 
 		mRestoring = false;
-
 	}
 }

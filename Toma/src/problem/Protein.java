@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Tuple2d;
 import javax.vecmath.Vector2d;
 
 public class Protein extends Problem {
@@ -92,10 +91,6 @@ public class Protein extends Problem {
 		mVector2dToMonomer.put(position, monomer);
 
 		return false;
-
-		// TODO: remove..
-		// monomer.setPosition(new Vector2d(pNewX, pNewY));
-		// mVector2dToMonomer.put(monomer.getPosition(), monomer);
 	}
 
 	public void saveResults() {
