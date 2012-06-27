@@ -3,18 +3,20 @@ package algorithm;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Vector2d;
+
 import problem.Direction;
 import problem.Monomer;
 import problem.MonomerType;
 import problem.Protein;
-import utilities.HashedVector2d;
+
 
 public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	private Direction mOldDirectionOfI;
-	private List<HashedVector2d> mTempPositions;
-	private HashedVector2d mTempVector;
-	private List<HashedVector2d> mPotencialsNeighbors;
+	private List<Vector2d> mTempPositions;
+	private Vector2d mTempVector;
+	private List<Vector2d> mPotencialsNeighbors;
 	// private List<Pair> mLoops; TODO?: remove it..
 	private LoopsManager mLoopsManager;
 
@@ -30,16 +32,16 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	private void initDataStructures() {
 
-		mTempPositions = new ArrayList<HashedVector2d>(
+		mTempPositions = new ArrayList<Vector2d>(
 				mProtein.getNumOfMonomers());
-		mTempVector = new HashedVector2d();
+		mTempVector = new Vector2d();
 
-		mPotencialsNeighbors = new ArrayList<HashedVector2d>(4);
+		mPotencialsNeighbors = new ArrayList<Vector2d>(4);
 
-		mPotencialsNeighbors.add(0, new HashedVector2d());
-		mPotencialsNeighbors.add(1, new HashedVector2d());
-		mPotencialsNeighbors.add(2, new HashedVector2d());
-		mPotencialsNeighbors.add(3, new HashedVector2d());
+		mPotencialsNeighbors.add(0, new Vector2d());
+		mPotencialsNeighbors.add(1, new Vector2d());
+		mPotencialsNeighbors.add(2, new Vector2d());
+		mPotencialsNeighbors.add(3, new Vector2d());
 
 		// mLoops = new ArrayList<Pair>();
 
@@ -119,10 +121,10 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		if (0 == pMonomerIndex)
 			pMonomerIndex = 1;
 
-		HashedVector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
+		Vector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
 				.getPosition();
 
-		HashedVector2d pointIminusOne = mProtein.getMonomers()
+		Vector2d pointIminusOne = mProtein.getMonomers()
 				.get(pMonomerIndex - 1).getPosition();
 
 		mTempVector.sub(pointI, pointIminusOne);
@@ -132,13 +134,13 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	}
 
 	private void calcPositionsStartingFromThisMonomerRecursivly(
-			int pMonomerIndex, HashedVector2d pPointIminusOne,
-			HashedVector2d pDirectionsVector) {
+			int pMonomerIndex, Vector2d pPointIminusOne,
+			Vector2d pDirectionsVector) {
 
 		if (mProtein.getNumOfMonomers() - 1 == pMonomerIndex)
 			return;
 
-		HashedVector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
+		Vector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
 				.getPosition();
 
 		Direction directionOfI = mProtein.getMonomers().get(pMonomerIndex)
@@ -157,7 +159,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 				pointI, pDirectionsVector);
 	}
 
-	private void turnDirectionVectorLeft(HashedVector2d pDirectionsVector) {
+	private void turnDirectionVectorLeft(Vector2d pDirectionsVector) {
 
 		double x = pDirectionsVector.getX();
 		double y = pDirectionsVector.getY();
@@ -165,7 +167,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		pDirectionsVector.set(-y, x);
 	}
 
-	private void turnDirectionVectorRight(HashedVector2d pDirectionsVector) {
+	private void turnDirectionVectorRight(Vector2d pDirectionsVector) {
 
 		double x = pDirectionsVector.getX();
 		double y = pDirectionsVector.getY();
@@ -191,7 +193,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 			calcPotencialsNeighbors(monomer.getPosition());
 
-			for (HashedVector2d pn : mPotencialsNeighbors) {
+			for (Vector2d pn : mPotencialsNeighbors) {
 
 				Monomer neighborMonomer = mProtein.getMonomerFromVector2d(pn);
 
@@ -217,7 +219,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		mProtein.setEnergy(energy);
 	}
 
-	private void calcPotencialsNeighbors(HashedVector2d pPosition) {
+	private void calcPotencialsNeighbors(Vector2d pPosition) {
 
 		mPotencialsNeighbors.get(0).set(pPosition.getX() + 1, pPosition.getY());
 		mPotencialsNeighbors.get(1).set(pPosition.getX() - 1, pPosition.getY());
