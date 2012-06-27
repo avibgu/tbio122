@@ -1,63 +1,48 @@
 package algorithm;
 
-import java.util.ArrayList;
-
 import problem.Protein;
 
 public class LoopsManager {
 
 	private Protein mProtein;
-	
-	private ArrayList<MonomerLoops> mLoopsStarts;
-	private ArrayList<MonomerLoops> mLoopsEnds;
-	
+
+	private double[] mLoopsStarts;
+	private double[] mLoopsEnds;
+
 	public LoopsManager(Protein pProtein, int pNumOfMonomers) {
-		
+
 		mProtein = pProtein;
-		
-		mLoopsStarts = new ArrayList<MonomerLoops>(pNumOfMonomers);
-		mLoopsEnds = new ArrayList<MonomerLoops>(pNumOfMonomers);
-		
-		for (int i = 0; i < pNumOfMonomers; i++){
-			mLoopsStarts.add(new MonomerLoops(mProtein));
-			mLoopsEnds.add(new MonomerLoops(mProtein));
-		}
+
+		mLoopsStarts = new double[pNumOfMonomers];
+		mLoopsEnds = new double[pNumOfMonomers];
+
+		clear();
 	}
-	
+
 	public void markLoop(int fromIndex, int toIndex) {
 
-		int loopLength = toIndex - fromIndex; 
-		
+		double coolingValue = mProtein.getCoolingValue(toIndex - fromIndex);
+
 		// "a loop of length (toIndex - fromIndex) starts from me.."
-		mLoopsStarts.get(fromIndex).add(loopLength);
-		
+		mLoopsStarts[fromIndex] += coolingValue;
+
 		// "a loop of length (toIndex - fromIndex) ends at me.."
-		mLoopsEnds.get(toIndex).add(loopLength);
+		mLoopsEnds[toIndex] += coolingValue;
 	}
 
 	public void clear() {
-		
-		for (MonomerLoops monomerLoops : mLoopsStarts)
-			monomerLoops.clear();
-		
-		for (MonomerLoops monomerLoops : mLoopsEnds)
-			monomerLoops.clear();
+
+		for (int i = 0; i < mLoopsStarts.length; i++){
+			mLoopsStarts[i] = 0;
+			mLoopsEnds[i] = 0;
+		}
 	}
 
-	public ArrayList<MonomerLoops> getLoopsStarts() {
-		return mLoopsStarts;
+	public double getLoopsStartsCoolingValue(int pI) {
+		return mLoopsStarts[pI];
 	}
 
-	public void setLoopsStarts(ArrayList<MonomerLoops> pLoopsStarts) {
-		mLoopsStarts = pLoopsStarts;
+	public double getLoopsEndsCoolingValue(int pI) {
+		return mLoopsEnds[pI];
 	}
-
-	public ArrayList<MonomerLoops> getLoopsEnds() {
-		return mLoopsEnds;
-	}
-
-	public void setLoopsEnds(ArrayList<MonomerLoops> pLoopsEnds) {
-		mLoopsEnds = pLoopsEnds;
-	}
-
 }

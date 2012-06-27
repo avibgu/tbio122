@@ -217,7 +217,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	@Override
 	protected void decreaseTemperature() {
 		// should be performed due to some cooling strategy
-		mProtein.setTemperature(mProtein.getTemperature() * 0.999999);
+		mProtein.setTemperature(mProtein.getTemperature() * 0.999998);
 	}
 
 	@Override
@@ -225,17 +225,15 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		// do this for all the residues that participates in loops
 		// we should avoid double-counting
 
-		int coolingValue = 0;
+		double coolingValue = 0;
 
 		for (int i = 0; i < mProtein.getNumOfMonomers(); i++) {
 
-			coolingValue += mLoopsManager.getLoopsStarts().get(i)
-					.getCoolingValue();
+			coolingValue += mLoopsManager.getLoopsStartsCoolingValue(i);
 
 			mProtein.getMonomer(i).decreaseMobility(coolingValue);
 
-			coolingValue -= mLoopsManager.getLoopsEnds().get(i)
-					.getCoolingValue();
+			coolingValue -= mLoopsManager.getLoopsEndsCoolingValue(i);
 		}
 	}
 
