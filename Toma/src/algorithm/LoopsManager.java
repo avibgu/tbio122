@@ -15,7 +15,7 @@ public class LoopsManager {
 
 	public void markLoop(int fromIndex, int toIndex) {
 
-		double coolingValue = CollingStrategy.getCoolingValue(toIndex - fromIndex);
+		double coolingValue = MobilityDecreasingStrategy.MobilityDecreasingValue(toIndex - fromIndex);
 
 		// "a loop of length (toIndex - fromIndex) starts from me.."
 		mLoopsStarts[fromIndex] += coolingValue;
