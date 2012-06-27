@@ -20,6 +20,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	// private List<Pair> mLoops; TODO?: remove it..
 	private LoopsManager mLoopsManager;
 	private int mStopIndex;
+	private boolean mRestoring;
 
 	public ConcreteTomaAlgorithm() {
 		super();
@@ -49,6 +50,8 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		mLoopsManager = new LoopsManager(mProtein, mProtein.getNumOfMonomers());
 
 		mStopIndex = mProtein.getNumOfMonomers();
+
+		mRestoring = false;
 	}
 
 	@Override
@@ -144,7 +147,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		if (mProtein.getNumOfMonomers() - 1 == pMonomerIndex)
 			return true;
 
-		if (mStopIndex <= pMonomerIndex){
+		if (mRestoring && pMonomerIndex >= mStopIndex){
 
 			mStopIndex = mProtein.getNumOfMonomers();
 			return true;
@@ -301,7 +304,13 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 	@Override
 	protected void restoreStructure(int pI) {
+
+		mRestoring = true;
+
 		mProtein.getMonomer(pI).setDirection(mOldDirectionOfI);
 		calcPositionsStartingFromThisMonomer(pI);
+
+		mRestoring = false;
+
 	}
 }

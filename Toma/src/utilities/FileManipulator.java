@@ -15,14 +15,15 @@ public class FileManipulator {
 
 		Set<Protein> answer = new HashSet<Protein>();
 
-//		answer.add(new Protein("HHPPHHPPHHPPHHPPHHPPHH"));
+		// answer.add(new Protein("HHPPHHPPHHPPHHPPHHPPHH"));
 
 		// answer.add(new Protein("HPPH"));
 		// answer.add(new Protein("HHHPPHPHPHPPHPHPHPPH"));
 		// answer.add(new Protein("PHPPHHPPPPHHPPPPHHPPPPHH"));
 		// answer.add(new Protein("PPPHHPPHHPPPPPHHHHHHHPPHHPPPPHHPPHPP"));
 
-		answer.add(new Protein("PHPPHHPPHHPPPPHHHHHHHHHHPPPPPPHHPPHHPPHPPHHHHH"));
+		answer.add(new Protein(
+			"PHPPHHPPHHPPPPHHHHHHHHHHPPPPPPHHPPHHPPHPPHHHHH"));
 
 		return answer;
 	}
