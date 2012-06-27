@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.vecmath.Tuple2d;
 import javax.vecmath.Vector2d;
 
 public class Protein extends Problem {
@@ -21,6 +22,8 @@ public class Protein extends Problem {
 	private int mNumOfH;
 	private int mNumOfP;
 
+	private Vector2d mTempPosition;
+
 	public Protein(String pSequense) {
 
 		super();
@@ -32,6 +35,7 @@ public class Protein extends Problem {
 		setTemperature((0.3 * getNumOfH())
 				/ (0.5 * (getNumOfH() + getNumOfP())));
 		mResults = "";
+		mTempPosition = new Vector2d();
 	}
 
 	private void initMonomers(String pSequense) {
@@ -70,7 +74,12 @@ public class Protein extends Problem {
 		return 20 / (pK + 17);
 	}
 
-	public void setMonomerPosition(int pMonomerIndex, double pNewX, double pNewY) {
+	public boolean setMonomerPosition(int pMonomerIndex, double pNewX, double pNewY) {
+
+		mTempPosition.set(pNewX, pNewY);
+
+		if (mVector2dToMonomer.containsKey(mTempPosition))
+			return true;
 
 		Monomer monomer = getMonomers().get(pMonomerIndex);
 
@@ -81,6 +90,12 @@ public class Protein extends Problem {
 		position.set(pNewX, pNewY);
 
 		mVector2dToMonomer.put(position, monomer);
+
+		return false;
+
+		// TODO: remove..
+		// monomer.setPosition(new Vector2d(pNewX, pNewY));
+		// mVector2dToMonomer.put(monomer.getPosition(), monomer);
 	}
 
 	public void saveResults() {
@@ -152,8 +167,7 @@ public class Protein extends Problem {
 		return mVector2dToMonomer;
 	}
 
-	public void setVector2dToMonomer(
-			Map<Vector2d, Monomer> pVector2dToMonomer) {
+	public void setVector2dToMonomer(Map<Vector2d, Monomer> pVector2dToMonomer) {
 		mVector2dToMonomer = pVector2dToMonomer;
 	}
 

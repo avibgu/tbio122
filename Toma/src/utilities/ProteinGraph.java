@@ -25,7 +25,7 @@ public class ProteinGraph extends JApplet {
 
 	private static final int SCALE_FACTOR = 50;
 	private static final int BOUNDRY = 25;
-	
+
 	private static final Dimension DEFAULT_SIZE = new Dimension(1200,600);
 
 	private static final double MONOMER_HEIGHT = 15;
@@ -35,15 +35,15 @@ public class ProteinGraph extends JApplet {
 	private JGraphModelAdapter<String, DefaultEdge> jgAdapter;
 
 	public static void show(String pResult) {
-		
+
 		ProteinGraph applet = new ProteinGraph();
-		
+
 		applet.init(pResult);
 
 		JFrame frame = new JFrame();
-		
+
 		frame.getContentPane().add(applet);
-		frame.setTitle("JGraphT Adapter to JGraph Demo");
+		frame.setTitle(pResult.split("\n")[1]);		//TODO: improve..
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
@@ -52,7 +52,7 @@ public class ProteinGraph extends JApplet {
 	public void init(String pResult) {
 
 		String[] stringMonomers = pResult.split("\n");
-		
+
 		// create a JGraphT graph
 		ListenableGraph<String, DefaultEdge> g = new ListenableDirectedMultigraph<String, DefaultEdge>(
 				DefaultEdge.class);
@@ -70,21 +70,21 @@ public class ProteinGraph extends JApplet {
 
 		int minX = Integer.MAX_VALUE;
 		int minY = Integer.MAX_VALUE;
-		
+
 		for (int i = 3; i < stringMonomers.length; i++){
-			
+
 			String[] monomer = stringMonomers[i].split(",");
-			
+
 			int x = Integer.parseInt(monomer[0]);
 			int y = Integer.parseInt(monomer[1]);
-			
+
 			if (x < minX)
 				minX = x;
-			
+
 			if (y < minY)
 				minY = y;
 		}
-		
+
 		String prevCell = "";
 
 		for (int i = 3; i < stringMonomers.length; i++) {
@@ -130,18 +130,18 @@ public class ProteinGraph extends JApplet {
 	private void removeText(DefaultEdge pEdge) {
 
 		DefaultGraphCell cell = jgAdapter.getEdgeCell(pEdge);
-		
+
 		AttributeMap attr = cell.getAttributes();
-		
+
 		GraphConstants.setValue(attr, "");
-		
+
 		AttributeMap cellAttr = new AttributeMap();
 
 		cellAttr.put(cell, attr);
 
 		jgAdapter.edit(cellAttr, null, null, null);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void positionVertexAt(Object vertex, int x, int y) {
 
@@ -154,12 +154,12 @@ public class ProteinGraph extends JApplet {
 
 		if (((String)vertex).contains("H"))
 			GraphConstants.setBackground(attr, H_COLOR);
-		
+
 		else
 			GraphConstants.setBackground(attr, P_COLOR);
-		
+
 		GraphConstants.setValue(attr, "");
-		
+
 		AttributeMap cellAttr = new AttributeMap();
 
 		cellAttr.put(cell, attr);

@@ -19,6 +19,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	private List<Vector2d> mPotencialsNeighbors;
 	// private List<Pair> mLoops; TODO?: remove it..
 	private LoopsManager mLoopsManager;
+	private int mStopIndex;
 
 	public ConcreteTomaAlgorithm() {
 		super();
@@ -46,6 +47,8 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		// mLoops = new ArrayList<Pair>();
 
 		mLoopsManager = new LoopsManager(mProtein, mProtein.getNumOfMonomers());
+
+		mStopIndex = mProtein.getNumOfMonomers();
 	}
 
 	@Override
@@ -89,6 +92,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		else if (2 == rnd)
 			newThetaI = Direction.RIGHT;
 
+		// TODO: immutable??..
 		mOldDirectionOfI = mProtein.getMonomer(pI).getDirection();
 
 		mProtein.getMonomer(pI).setDirection(newThetaI);
@@ -102,21 +106,21 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		// improvement: we can calc the Rectangles of those two Sets, and only
 		// when they collide we will perform the big check
 
-		calcPositionsStartingFromThisMonomer(pI);
-
-		mTempPositions.clear();
-
-		for (int i = 0; i <= pI; i++)
-			mTempPositions.add(mProtein.getMonomer(i).getPosition());
-
-		for (int i = pI + 1; i < mProtein.getNumOfMonomers(); i++)
-			if (mTempPositions.contains(mProtein.getMonomer(i).getPosition()))
-				return false;
-
-		return true;
+		return calcPositionsStartingFromThisMonomer(pI);
+//
+//		mTempPositions.clear();
+//
+//		for (int i = 0; i <= pI; i++)
+//			mTempPositions.add(mProtein.getMonomer(i).getPosition());
+//
+//		for (int i = pI + 1; i < mProtein.getNumOfMonomers(); i++)
+//			if (mTempPositions.contains(mProtein.getMonomer(i).getPosition()))
+//				return false;
+//
+//		return true;
 	}
 
-	private void calcPositionsStartingFromThisMonomer(int pMonomerIndex) {
+	private boolean calcPositionsStartingFromThisMonomer(int pMonomerIndex) {
 
 		if (0 == pMonomerIndex)
 			pMonomerIndex = 1;
@@ -129,16 +133,22 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 		mTempVector.sub(pointI, pointIminusOne);
 
-		calcPositionsStartingFromThisMonomerRecursivly(pMonomerIndex,
+		return calcPositionsStartingFromThisMonomerRecursivly(pMonomerIndex,
 				pointIminusOne, mTempVector);
 	}
 
-	private void calcPositionsStartingFromThisMonomerRecursivly(
+	private boolean calcPositionsStartingFromThisMonomerRecursivly(
 			int pMonomerIndex, Vector2d pPointIminusOne,
 			Vector2d pDirectionsVector) {
 
 		if (mProtein.getNumOfMonomers() - 1 == pMonomerIndex)
-			return;
+			return true;
+
+		if (mStopIndex <= pMonomerIndex){
+
+			mStopIndex = mProtein.getNumOfMonomers();
+			return true;
+		}
 
 		Vector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
 				.getPosition();
@@ -152,10 +162,15 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		else if (Direction.RIGHT == directionOfI)
 			turnDirectionVectorRight(pDirectionsVector);
 
-		mProtein.setMonomerPosition(pMonomerIndex + 1, pointI.getX()
+		boolean overlaps = mProtein.setMonomerPosition(pMonomerIndex + 1, pointI.getX()
 				+ mTempVector.getX(), pointI.getY() + mTempVector.getY());
 
-		calcPositionsStartingFromThisMonomerRecursivly(pMonomerIndex + 1,
+		if (overlaps){
+			mStopIndex = pMonomerIndex;
+			return false;
+		}
+
+		return calcPositionsStartingFromThisMonomerRecursivly(pMonomerIndex + 1,
 				pointI, pDirectionsVector);
 	}
 
