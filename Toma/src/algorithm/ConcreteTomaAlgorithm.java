@@ -15,7 +15,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	private List<HashedVector2d> mTempPositions;
 	private HashedVector2d mTempVector;
 	private List<HashedVector2d> mPotencialsNeighbors;
-	// private List<Pair> mLoops;
+	// private List<Pair> mLoops; TODO?: remove it..
 	private LoopsManager mLoopsManager;
 
 	public ConcreteTomaAlgorithm() {
@@ -273,10 +273,10 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 		/*
 		 * Calc Energy Fills these structures (of size N):
-		 * 
+		 *
 		 * loopStart[[k11,k12,k13],[k21,k22,k23],...]
 		 * loopEnd[[[d11,d22,d23],[d21,d22,d23],...]
-		 * 
+		 *
 		 * We iterate the protein, monomer by monomer, and reducing f(i) by X,
 		 * When X = Sum(kij) - Sum(dij) that we saw until i (included?..)
 		 */
