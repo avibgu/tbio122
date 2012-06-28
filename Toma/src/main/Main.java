@@ -27,7 +27,7 @@ public class Main {
 
 		TomaAlgorithm algorithm;
 
-		Set<Protein> problems = FileManipulator.getProblemsFromFile(args[0]);
+		Set<Protein> problems = FileManipulator.getProteinsFromFile(args[0]);
 
 		for (Protein problem : problems) {
 

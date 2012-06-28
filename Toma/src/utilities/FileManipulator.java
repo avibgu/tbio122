@@ -14,7 +14,7 @@ import problem.Protein;
 
 public class FileManipulator {
 
-	public static Set<Protein> getProblemsFromFile(String pFileName) {
+	public static Set<Protein> getProteinsFromFile(String pFileName) {
 
 		FileInputStream fis = null;
 
