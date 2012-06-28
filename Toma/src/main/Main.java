@@ -48,13 +48,9 @@ public class Main {
 
 		int i = 1;
 
-		for (Protein problem : problems) {
-
-			System.out.println("FINISH\n" + problem.getResults());
-
+		for (Protein problem : problems)
 			FileManipulator.writeResultsToFile(problem.getResults(), "problem"
 					+ i++ + ".csv");
-		}
 	}
 
 	protected static void produceRusultsAsGraph(Set<Protein> problems) {
