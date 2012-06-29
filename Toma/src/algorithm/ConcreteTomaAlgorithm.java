@@ -187,7 +187,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 			for (Vector2d pn : mPotencialsNeighbors) {
 
-				Monomer neighborMonomer = mProtein.getMonomerFromVector2d(pn);
+				Monomer neighborMonomer = mProtein.getMonomerFromPosition(pn);
 
 				// i + 1 => for only Monomers that are greater than me, and not
 				// connected directly to me

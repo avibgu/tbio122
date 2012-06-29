@@ -16,10 +16,10 @@ public class Protein extends Problem {
 	private double mTemperature; // Ck
 
 	private List<Monomer> mMonomers;
-	private Map<Vector2d, Monomer> mVector2dToMonomer;
+	private Map<Vector2d, Monomer> mPositionToMonomerLookupMap;
 
-	private int mNumOfH;
-	private int mNumOfP;
+	private int mNumOfHMonomers;
+	private int mNumOfPMonomers;
 
 	private Vector2d mTempPosition;
 
@@ -30,34 +30,34 @@ public class Protein extends Problem {
 		setNumOfMonomers(pSequense.length());
 		setEnergy(0);
 		initMonomers(pSequense);
-		setTemperature(CoolingStrategy.getInitialTemperature(mNumOfH, mNumOfP));
-		mResults = "";
-		mTempPosition = new Vector2d();
+		setTemperature(CoolingStrategy.getInitialTemperature(mNumOfHMonomers,
+				mNumOfPMonomers));
+		setTempPosition(new Vector2d());
 	}
 
 	private void initMonomers(String pSequense) {
 
 		mMonomers = new ArrayList<Monomer>(getNumOfMonomers());
-		mVector2dToMonomer = new HashMap<Vector2d, Monomer>();
+		mPositionToMonomerLookupMap = new HashMap<Vector2d, Monomer>();
 
 		char[] sequense = pSequense.toCharArray();
 
-		mNumOfH = 0;
-		mNumOfP = 0;
+		mNumOfHMonomers = 0;
+		mNumOfPMonomers = 0;
 
 		for (int i = 0; i < sequense.length; i++) {
 
-			Vector2d vector = new Vector2d(i, 0);
-			Monomer monomer = new Monomer(sequense[i], vector, i);
+			Vector2d posiotion = new Vector2d(i, 0);
+			Monomer monomer = new Monomer(sequense[i], posiotion, i);
 
 			mMonomers.add(monomer);
-			mVector2dToMonomer.put(vector, monomer);
+			mPositionToMonomerLookupMap.put(posiotion, monomer);
 
 			if (monomer.getType() == MonomerType.H)
-				mNumOfH++;
+				mNumOfHMonomers++;
 
 			else
-				mNumOfP++;
+				mNumOfPMonomers++;
 		}
 	}
 
@@ -66,18 +66,18 @@ public class Protein extends Problem {
 
 		mTempPosition.set(pNewX, pNewY);
 
-		if (mVector2dToMonomer.containsKey(mTempPosition))
+		if (mPositionToMonomerLookupMap.containsKey(mTempPosition))
 			return true;
 
 		Monomer monomer = getMonomers().get(pMonomerIndex);
 
 		Vector2d position = monomer.getPosition();
 
-		mVector2dToMonomer.remove(position);
+		mPositionToMonomerLookupMap.remove(position);
 
 		position.set(pNewX, pNewY);
 
-		mVector2dToMonomer.put(position, monomer);
+		mPositionToMonomerLookupMap.put(position, monomer);
 
 		return false;
 	}
@@ -114,16 +114,16 @@ public class Protein extends Problem {
 		return mNumOfMonomers;
 	}
 
-	public void setNumOfMonomers(int pN) {
-		mNumOfMonomers = pN;
+	public void setNumOfMonomers(int pNumOfMonomer) {
+		mNumOfMonomers = pNumOfMonomer;
 	}
 
 	public int getEnergy() {
 		return mEnergy;
 	}
 
-	public void setEnergy(int pE) {
-		mEnergy = pE;
+	public void setEnergy(int pEnergy) {
+		mEnergy = pEnergy;
 	}
 
 	public double getTemperature() {
@@ -146,23 +146,40 @@ public class Protein extends Problem {
 		return mMonomers.get(pIndex);
 	}
 
-	public Map<Vector2d, Monomer> getVector2dToMonomer() {
-		return mVector2dToMonomer;
+	public Map<Vector2d, Monomer> getPositionToMonomerLookupMap() {
+		return mPositionToMonomerLookupMap;
 	}
 
-	public void setVector2dToMonomer(Map<Vector2d, Monomer> pVector2dToMonomer) {
-		mVector2dToMonomer = pVector2dToMonomer;
+	public void setPositionToMonomerLookupMap(
+			Map<Vector2d, Monomer> pPositionToMonomerLookupMap) {
+		mPositionToMonomerLookupMap = pPositionToMonomerLookupMap;
 	}
 
-	public Monomer getMonomerFromVector2d(Vector2d pVector2d) {
-		return mVector2dToMonomer.get(pVector2d);
+	public Monomer getMonomerFromPosition(Vector2d pPosition) {
+		return mPositionToMonomerLookupMap.get(pPosition);
 	}
 
-	public int getNumOfH() {
-		return mNumOfH;
+	public int getNumOfHMonomers() {
+		return mNumOfHMonomers;
 	}
 
-	public int getNumOfP() {
-		return mNumOfP;
+	public void setNumOfHMonomers(int pNumOfHMonomers) {
+		mNumOfHMonomers = pNumOfHMonomers;
+	}
+
+	public int getNumOfPMonomers() {
+		return mNumOfPMonomers;
+	}
+
+	public void setNumOfPMonomers(int pNumOfPMonomers) {
+		mNumOfPMonomers = pNumOfPMonomers;
+	}
+
+	public Vector2d getTempPosition() {
+		return mTempPosition;
+	}
+
+	public void setTempPosition(Vector2d pTempPosition) {
+		mTempPosition = pTempPosition;
 	}
 }
