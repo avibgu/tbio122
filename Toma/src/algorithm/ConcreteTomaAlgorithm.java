@@ -55,47 +55,48 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	}
 
 	@Override
-	protected boolean shouldWeMoveIt(int pI) {
+	protected boolean shouldWeMoveIt(int pMonomerIndex) {
 
 		// move it if Rnd < exp[f(i)/ck]
 
 		// the criterion is always satisfied for residues not belonging to loop
 		// defined by HH contacts
 
-		if (0 == pI || mProtein.getNumOfMonomers() - 1 == pI)
+		if (0 == pMonomerIndex
+				|| mProtein.getNumOfMonomers() - 1 == pMonomerIndex)
 			return false;
 
 		double rnd = mProtein.getRandom().nextDouble();
 
-		double x = Math.exp(mProtein.getMonomer(pI).getMobility()
-				/ mProtein.getTemperature());
+		double expResult = Math.exp(mProtein.getMonomer(pMonomerIndex)
+				.getMobility() / mProtein.getTemperature());
 
-		return rnd < x;
+		return rnd < expResult;
 	}
 
 	@Override
-	protected void performRandomlyMovement(int pI) {
+	protected void performRandomlyMovement(int pMonomerIndex) {
 		// choose Theta(i), while taking as invariant all other Theta
 		// coordinates (this corresponds to a pivot move)
 
-		int rnd = ((int) (mProtein.getRandom().nextDouble() * 1000)) % 3;
+		int selection = ((int) (mProtein.getRandom().nextDouble() * 1000)) % 3;
 
 		Direction newThetaI = Direction.AHEAD;
 
-		if (1 == rnd)
+		if (1 == selection)
 			newThetaI = Direction.LEFT;
 
-		else if (2 == rnd)
+		else if (2 == selection)
 			newThetaI = Direction.RIGHT;
 
-		mOldDirectionOfI = mProtein.getMonomer(pI).getDirection();
+		mOldDirectionOfI = mProtein.getMonomer(pMonomerIndex).getDirection();
 
-		mProtein.getMonomer(pI).setDirection(newThetaI);
+		mProtein.getMonomer(pMonomerIndex).setDirection(newThetaI);
 	}
 
 	@Override
-	protected boolean isTheStructureValid(int pI) {
-		return calcPositionsStartingFromThisMonomer(pI);
+	protected boolean isTheStructureValid(int pMonomerIndex) {
+		return calcPositionsStartingFromThisMonomer(pMonomerIndex);
 	}
 
 	private boolean calcPositionsStartingFromThisMonomer(int pMonomerIndex) {
@@ -103,21 +104,20 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		if (0 == pMonomerIndex)
 			pMonomerIndex = 1;
 
-		Vector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
+		Vector2d monomerIPosition = mProtein.getMonomers().get(pMonomerIndex)
 				.getPosition();
 
-		Vector2d pointIminusOne = mProtein.getMonomers().get(pMonomerIndex - 1)
-				.getPosition();
+		Vector2d monomerIminusOnePosition = mProtein.getMonomers()
+				.get(pMonomerIndex - 1).getPosition();
 
-		mTempVector.sub(pointI, pointIminusOne);
+		mTempVector.sub(monomerIPosition, monomerIminusOnePosition);
 
 		return calcPositionsStartingFromThisMonomerRecursivly(pMonomerIndex,
-				pointIminusOne, mTempVector);
+				mTempVector);
 	}
 
 	private boolean calcPositionsStartingFromThisMonomerRecursivly(
-			int pMonomerIndex, Vector2d pPointIminusOne,
-			Vector2d pDirectionsVector) {
+			int pMonomerIndex, Vector2d pDirectionsVector) {
 
 		if (mProtein.getNumOfMonomers() - 1 == pMonomerIndex)
 			return true;
@@ -128,7 +128,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 			return true;
 		}
 
-		Vector2d pointI = mProtein.getMonomers().get(pMonomerIndex)
+		Vector2d monomerIPosition = mProtein.getMonomers().get(pMonomerIndex)
 				.getPosition();
 
 		Direction directionOfI = mProtein.getMonomers().get(pMonomerIndex)
@@ -141,8 +141,8 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 			turnDirectionVectorRight(pDirectionsVector);
 
 		boolean overlaps = mProtein.setMonomerPosition(pMonomerIndex + 1,
-				pointI.getX() + mTempVector.getX(), pointI.getY()
-						+ mTempVector.getY());
+				monomerIPosition.getX() + mTempVector.getX(),
+				monomerIPosition.getY() + mTempVector.getY());
 
 		if (overlaps) {
 			mStopIndex = pMonomerIndex;
@@ -150,7 +150,7 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		}
 
 		return calcPositionsStartingFromThisMonomerRecursivly(
-				pMonomerIndex + 1, pointI, pDirectionsVector);
+				pMonomerIndex + 1, pDirectionsVector);
 	}
 
 	private void turnDirectionVectorLeft(Vector2d pDirectionsVector) {
@@ -185,9 +185,9 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 
 			calcPotencialsNeighbors(monomer.getPosition());
 
-			for (Vector2d pn : mPotencialsNeighbors) {
+			for (Vector2d neighborPosition : mPotencialsNeighbors) {
 
-				Monomer neighborMonomer = mProtein.getMonomerFromPosition(pn);
+				Monomer neighborMonomer = mProtein.getMonomerFromPosition(neighborPosition);
 
 				// i + 1 => for only Monomers that are greater than me, and not
 				// connected directly to me
@@ -206,25 +206,22 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 		mProtein.setEnergy(energy);
 	}
 
-	private void calcPotencialsNeighbors(Vector2d pPosition) {
+	private void calcPotencialsNeighbors(Vector2d pMonomerPosition) {
 
-		mPotencialsNeighbors.get(0).set(pPosition.getX() + 1, pPosition.getY());
-		mPotencialsNeighbors.get(1).set(pPosition.getX() - 1, pPosition.getY());
-		mPotencialsNeighbors.get(2).set(pPosition.getX(), pPosition.getY() + 1);
-		mPotencialsNeighbors.get(3).set(pPosition.getX(), pPosition.getY() - 1);
+		mPotencialsNeighbors.get(0).set(pMonomerPosition.getX() + 1, pMonomerPosition.getY());
+		mPotencialsNeighbors.get(1).set(pMonomerPosition.getX() - 1, pMonomerPosition.getY());
+		mPotencialsNeighbors.get(2).set(pMonomerPosition.getX(), pMonomerPosition.getY() + 1);
+		mPotencialsNeighbors.get(3).set(pMonomerPosition.getX(), pMonomerPosition.getY() - 1);
 	}
 
 	@Override
 	protected void decreaseTemperature() {
-		// should be performed due to some cooling strategy
 		mProtein.setTemperature(CoolingStrategy.getNewTemperature(mProtein
 				.getTemperature()));
 	}
 
 	@Override
 	protected void updateF() {
-		// do this for all the residues that participates in loops
-		// we should avoid double-counting
 
 		double coolingValue = 0;
 
@@ -239,12 +236,12 @@ public class ConcreteTomaAlgorithm extends TomaAlgorithm {
 	}
 
 	@Override
-	protected void restoreStructure(int pI) {
+	protected void restoreStructure(int pMonomerIndex) {
 
 		mRestoring = true;
 
-		mProtein.getMonomer(pI).setDirection(mOldDirectionOfI);
-		calcPositionsStartingFromThisMonomer(pI);
+		mProtein.getMonomer(pMonomerIndex).setDirection(mOldDirectionOfI);
+		calcPositionsStartingFromThisMonomer(pMonomerIndex);
 
 		mRestoring = false;
 	}
