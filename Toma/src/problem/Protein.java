@@ -86,7 +86,6 @@ public class Protein extends Problem {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("\n");
 		sb.append("Energy: " + getEnergy() + "\n");
 		sb.append("X,Y,Type\n");
 
@@ -157,14 +156,6 @@ public class Protein extends Problem {
 
 	public Monomer getMonomerFromVector2d(Vector2d pVector2d) {
 		return mVector2dToMonomer.get(pVector2d);
-	}
-
-	public String getResults() {
-		return mResults;
-	}
-
-	public void setResults(String pResults) {
-		mResults = pResults;
 	}
 
 	public int getNumOfH() {

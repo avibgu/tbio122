@@ -25,13 +25,13 @@ public class Main {
 
 		initPropertiesFromFile(args[1]);
 
-		TomaAlgorithm algorithm;
+		TomaAlgorithm algorithm = null;
 
-		Set<Protein> problems = FileManipulator.getProteinsFromFile(args[0]);
+		Set<Protein> proteins = FileManipulator.getProteinsFromFile(args[0]);
 
-		for (Protein problem : problems) {
+		for (Protein protein : proteins) {
 
-			algorithm = new ConcreteTomaAlgorithm(problem);
+			algorithm = new ConcreteTomaAlgorithm(protein);
 
 			executor.execute(algorithm);
 		}
@@ -40,22 +40,22 @@ public class Main {
 
 		executor.awaitTermination(1, TimeUnit.DAYS);
 
-		produceRusultsAsCSV(problems);
-		produceRusultsAsGraph(problems);
+		produceRusultsAsCSV(proteins);
+		produceRusultsAsGraph(proteins);
 	}
 
-	protected static void produceRusultsAsCSV(Set<Protein> problems) {
+	protected static void produceRusultsAsCSV(Set<Protein> pProteins) {
 
 		int i = 1;
 
-		for (Protein problem : problems)
-			FileManipulator.writeResultsToFile(problem.getResults(), "problem"
+		for (Protein protein : pProteins)
+			FileManipulator.writeResultsToFile(protein.getResults(), "problem"
 					+ i++ + ".csv");
 	}
 
-	protected static void produceRusultsAsGraph(Set<Protein> problems) {
-		for (Protein problem : problems)
-			ProteinGraph.show(problem.getResults());
+	protected static void produceRusultsAsGraph(Set<Protein> pProteins) {
+		for (Protein protein : pProteins)
+			ProteinGraph.show(protein.getResults());
 	}
 
 	private static void initPropertiesFromFile(String pPropertiesFileLocation)

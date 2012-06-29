@@ -13,30 +13,31 @@ public class LoopsManager {
 		clear();
 	}
 
-	public void markLoop(int fromIndex, int toIndex) {
+	public void markLoop(int pFromIndex, int pToIndex) {
 
-		double coolingValue = MobilityDecreasingStrategy.MobilityDecreasingValue(toIndex - fromIndex);
+		double coolingValue = MobilityDecreasingStrategy
+				.MobilityDecreasingValue(pToIndex - pFromIndex);
 
 		// "a loop of length (toIndex - fromIndex) starts from me.."
-		mLoopsStarts[fromIndex] += coolingValue;
+		mLoopsStarts[pFromIndex] += coolingValue;
 
 		// "a loop of length (toIndex - fromIndex) ends at me.."
-		mLoopsEnds[toIndex] += coolingValue;
+		mLoopsEnds[pToIndex] += coolingValue;
 	}
 
 	public void clear() {
 
-		for (int i = 0; i < mLoopsStarts.length; i++){
+		for (int i = 0; i < mLoopsStarts.length; i++) {
 			mLoopsStarts[i] = 0;
 			mLoopsEnds[i] = 0;
 		}
 	}
 
-	public double getLoopsStartsCoolingValue(int pI) {
-		return mLoopsStarts[pI];
+	public double getLoopsStartsCoolingValue(int pIndex) {
+		return mLoopsStarts[pIndex];
 	}
 
-	public double getLoopsEndsCoolingValue(int pI) {
-		return mLoopsEnds[pI];
+	public double getLoopsEndsCoolingValue(int pIndex) {
+		return mLoopsEnds[pIndex];
 	}
 }

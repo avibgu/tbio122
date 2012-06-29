@@ -26,7 +26,7 @@ public class ProteinGraph extends JApplet {
 	private static final int SCALE_FACTOR = 50;
 	private static final int BOUNDRY = 25;
 
-	private static final Dimension DEFAULT_SIZE = new Dimension(1200,600);
+	private static final Dimension DEFAULT_SIZE = new Dimension(700,700);
 
 	private static final double MONOMER_HEIGHT = 15;
 	private static final double MONOMER_WIDTH = 15;
@@ -43,7 +43,7 @@ public class ProteinGraph extends JApplet {
 		JFrame frame = new JFrame();
 
 		frame.getContentPane().add(applet);
-		frame.setTitle(pResult.split("\n")[1]);		//TODO: improve..
+		frame.setTitle(pResult.split("\n")[0]);		//TODO: improve..
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
@@ -71,7 +71,7 @@ public class ProteinGraph extends JApplet {
 		int minX = Integer.MAX_VALUE;
 		int minY = Integer.MAX_VALUE;
 
-		for (int i = 3; i < stringMonomers.length; i++){
+		for (int i = 2; i < stringMonomers.length; i++){
 
 			String[] monomer = stringMonomers[i].split(",");
 

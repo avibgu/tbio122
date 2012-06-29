@@ -41,8 +41,6 @@ public abstract class TomaAlgorithm implements Runnable {
 
 		mProtein.setStartTime(new Date());
 
-		// i Assume that the initial state is extended structure
-
 		int minEnergy = 0;
 
 		while (numOfRunsRemain-- > 0) {
@@ -82,6 +80,8 @@ public abstract class TomaAlgorithm implements Runnable {
 
 		mProtein.setEndTime(new Date());
 
+		mProtein.setNumOfIterations(mNumOfMoves);
+		
 		mProtein.markAsSolved();
 	}
 

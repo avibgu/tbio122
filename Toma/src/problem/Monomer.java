@@ -24,8 +24,8 @@ public class Monomer {
 		mIndex = pIndex;
 	}
 
-	public void decreaseMobility(double pCoolingValue) {
-		mMobility -= pCoolingValue;
+	public void decreaseMobility(double pValue) {
+		mMobility -= pValue;
 	}
 
 	public String getResults() {

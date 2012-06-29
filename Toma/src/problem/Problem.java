@@ -12,6 +12,7 @@ public abstract class Problem {
 	protected Date		mEndTime;
 	protected Random	mRandom;
 	protected String	mResults;
+	protected int		mNumOfIterations;
 
 	public Problem() {
 		init();
@@ -24,6 +25,7 @@ public abstract class Problem {
 		setEndTime(null);
 		setRandom(new Random(Integer.parseInt(Main.prop.getProperty("SEED"))));
 		setResults("");
+		setNumOfIterations(0);
 	}
 
 	public boolean isSolved(){
@@ -72,5 +74,13 @@ public abstract class Problem {
 
 	public void setSolved(boolean pSolved) {
 		mSolved = pSolved;
+	}
+	
+	public int getNumOfIterations() {
+		return mNumOfIterations;
+	}
+
+	public void setNumOfIterations(int pNumOfIterations) {
+		mNumOfIterations = pNumOfIterations;
 	}
 }
