@@ -40,7 +40,11 @@ public class FileManipulator {
 
 			isr = new InputStreamReader(pInputStream);
 			br = new BufferedReader(isr);
-
+			
+			// removes the first line
+			if (br.ready())
+				br.readLine();
+			
 			while (br.ready())
 				answer.add(new Protein(br.readLine()));
 
