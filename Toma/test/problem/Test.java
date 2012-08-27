@@ -11,7 +11,7 @@ public class Test {
 
 		Main.prop.setProperty("SEED", "17124");
 		
-		int monomerIndex = 3;
+		int monomerIndex = 1;
 		
 		Protein protein = new Protein("HPPHHPPH");
 		
@@ -19,9 +19,22 @@ public class Test {
 		
 		for (int i = 0; i < 3; i++){
 			
+			monomerIndex++;
+
 			algorithm.performRandomlyMovement(monomerIndex);
+			algorithm.calcPositionsStartingFromThisMonomer(monomerIndex);
+			
 			protein.saveResults();
 			ProteinGraph.show(protein.getResults());
+			Thread.sleep(2000);
 		}
+		
+		monomerIndex--;
+		
+		algorithm.restoreStructure(monomerIndex);
+		
+		protein.saveResults();
+		ProteinGraph.show(protein.getResults());
+		Thread.sleep(2000);
 	}
 }
